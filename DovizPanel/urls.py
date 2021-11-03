@@ -17,8 +17,15 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.authtoken import views
 
+from provider.controllers import urls as curls
+from usrapp.controllers import urls as uurls
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('auth/', views.obtain_auth_token)
+    path('auth/', views.obtain_auth_token),
+
+    path('usrapp/', uurls),
+    path('provider/', curls),
+
 ]
