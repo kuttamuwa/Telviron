@@ -1,1 +1,1 @@
- celery -A DovizPanel worker -l INFO -E
+ celery -A DovizPanel worker --pool=solo -l INFO -E

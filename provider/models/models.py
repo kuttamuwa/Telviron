@@ -18,14 +18,13 @@ http://www.ozbeyfiziki.com/mobil/data2.txt
 
 
 class Doviz(models.Model):
-    kur = models.CharField(max_length=7, name='Kur', verbose_name='Kur')
-    update_date = models.DateTimeField(verbose_name='Güncellenme Tarihi', name='Tarih',
-                                       auto_now_add=True)
-    alis = models.FloatField(name='Alis', verbose_name='Alış')
-    satis = models.FloatField(name='Satis', verbose_name='Satış')
-    dusuk = models.FloatField(name='Dusuk', verbose_name='Düşük')
-    yuksek = models.FloatField(name='Yuksek', verbose_name='Yüksek')
-    source = models.CharField(max_length=50, name='Veri kaynağı', verbose_name='Veri Kaynağı')
+    kur = models.CharField(max_length=7, name='kur', verbose_name='Kur')
+    update_date = models.DateTimeField(verbose_name='Güncellenme Tarihi', name='update_date')
+    alis = models.FloatField(name='alis', verbose_name='Alış')
+    satis = models.FloatField(name='satis', verbose_name='Satış')
+    dusuk = models.FloatField(name='dusuk', verbose_name='Düşük')
+    yuksek = models.FloatField(name='yuksek', verbose_name='Yüksek')
+    source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı')
 
     def __str__(self):
         return f'{self.kur} \n ' \
@@ -39,8 +38,8 @@ class Doviz(models.Model):
 class Makas(models.Model):
     kur = models.OneToOneField(Doviz, on_delete=models.PROTECT)
 
-    alis = models.FloatField(name='Alis', verbose_name='Alış')
-    satis = models.FloatField(name='Satis', verbose_name='Satış')
+    alis = models.FloatField(name='alis', verbose_name='Alış')
+    satis = models.FloatField(name='satis', verbose_name='Satış')
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

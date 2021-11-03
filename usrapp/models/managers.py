@@ -36,7 +36,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         # TODO: source of the leak on the chain...
-        return self.create_user(email, password **extra_fields)
+        return self.create_user(email, password, **extra_fields)
 
 
 class Command(BaseCommand):
