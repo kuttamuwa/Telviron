@@ -147,6 +147,12 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+
 # Celery Configuration Options
 CELERY_TIMEZONE = "Europe/Istanbul"
 CELERY_TASK_TRACK_STARTED = True

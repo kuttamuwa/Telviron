@@ -7,4 +7,4 @@ class ProviderConfig(AppConfig):
 
     def ready(self):
         from provider.scheduled_tasks.ozbey import pull_data
-        pull_data()
+        # pull_data()

@@ -1,8 +1,9 @@
-from rest_framework.decorators import action
+from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 
 from provider.models.models import Doviz, Makas
 from provider.models.serializers import DovizSerializer, MakasSerializer
+from provider.views.paginations import StandardPagination
 
 
 class DovizAPI(ModelViewSet):
@@ -11,6 +12,13 @@ class DovizAPI(ModelViewSet):
     permission_classes = [
 
     ]
+    pagination_class = StandardPagination
+    filter_backends = [
+        filters.SearchFilter
+    ]
+    search_fields = ['source', 'kur']
+    ordering_fields = ['source', 'kur']
+    ordering = 'source'
 
     @staticmethod
     def standard_filter(qset):
@@ -38,3 +46,11 @@ class MakasAPI(ModelViewSet):
     permission_classes = [
 
     ]
+
+    pagination_class = StandardPagination
+    filter_backends = [
+        filters.SearchFilter
+    ]
+    search_fields = ['kur', 'created_date']
+    ordering_fields = ['kur', 'created_date']
+    ordering = 'kur'
