@@ -9,6 +9,9 @@ class DovizSerializer(ModelSerializer):
         model = Doviz
         fields = '__all__'
 
+    def __str__(self):
+        return ''
+
     def to_representation(self, instance):
         ret = super(DovizSerializer, self).to_representation(instance)
 
@@ -17,6 +20,9 @@ class DovizSerializer(ModelSerializer):
 
 class MakasSerializer(ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.ReadOnlyField(source='created_by.username')
+    kur = serializers.SlugRelatedField(many=False, read_only=False, slug_field='kur',
+                                       queryset=Doviz.objects.all())
 
     def create(self, validated_data):
         validated_data['created_by'] = validated_data.pop('user')
@@ -24,5 +30,4 @@ class MakasSerializer(ModelSerializer):
 
     class Meta:
         model = Makas
-        # fields = '__all__'
-        exclude = ('created_by', )
+        fields = '__all__'

@@ -52,5 +52,8 @@ class Makas(models.Model):
                f'Alış : {self.alis}\n' \
                f'Satış : {self.satis}'
 
+    def __repr__(self):
+        return self.__str__()
+
     class Meta:
         db_table = 'MAKAS'

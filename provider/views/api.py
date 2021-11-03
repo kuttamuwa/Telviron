@@ -58,4 +58,4 @@ class MakasAPI(ModelViewSet):
     ordering = 'kur'
     
     def create(self, request, *args, **kwargs):
-        return super(MakasAPI, self).create(request, *args, **kwargs)
+        return super(MakasAPI, self).create(request, *args, **kwargs, created_by=request.user)
