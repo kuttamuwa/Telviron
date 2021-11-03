@@ -27,6 +27,26 @@ class Doviz(models.Model):
     yuksek = models.FloatField(name='Yuksek', verbose_name='Yüksek')
     source = models.CharField(max_length=50, name='Veri kaynağı', verbose_name='Veri Kaynağı')
 
+    def __str__(self):
+        return f'{self.kur} \n ' \
+               f'Alış : {self.alis} \n' \
+               f'Satış : {self.satis} '
+
     class Meta:
         db_table = 'OZBEY_DOVIZ'
 
+
+class Makas(models.Model):
+    kur = models.OneToOneField(Doviz, on_delete=models.PROTECT)
+
+    alis = models.FloatField(name='Alis', verbose_name='Alış')
+    satis = models.FloatField(name='Satis', verbose_name='Satış')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.created_date} ZAMANLI {self.kur} PARITESI \n' \
+               f'Alış : {self.alis} \n' \
+               f'Satış : {self.satis}'
+
+    class Meta:
+        db_table = 'MAKAS'

@@ -1,0 +1,1 @@
+ celery -A DovizPanel worker -l INFO -E
