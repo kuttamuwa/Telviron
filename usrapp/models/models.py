@@ -13,4 +13,11 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['email']
 
 
+class PhoneSMSVerify(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    code = models.CharField(max_length=10, name='code')
+
+    class Meta:
+        db_table = 'PhoneSMS'
+
 

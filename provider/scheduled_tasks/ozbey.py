@@ -26,6 +26,9 @@ def pull_data():
     # data manipulation
     for kur, info in data.items():
         try:
+            # :WARNING : Ozbey'in sitesinde alis satis birbirinin yerineydi normalde,
+            # bu sefer o degisikligi yapmadim
+
             ozbey_data = Doviz(
                 kur=info['title'],
                 alis=float(info['alis'].replace(',', '.')),
