@@ -35,6 +35,7 @@ def pull_data():
                 source='Ozbey',
                 update_date=tarih,
             )
+            ozbey_data.save()
             print(f"Kaydedildi : {ozbey_data}")
         except:  # todo: err: string indices must be integers
             if kur == ozbey_tarih_format:

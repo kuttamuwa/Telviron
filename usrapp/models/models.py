@@ -10,5 +10,7 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+    REQUIRED_FIELDS = ['email']
+
 
 
