@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from usrapp.models.serializers import UserSerializer, GroupSerializer, UserSerializerWithToken
+from usrapp.models.serializers import UserSerializer, GroupSerializer
 
 
 @api_view(['GET'])
