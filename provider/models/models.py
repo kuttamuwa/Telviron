@@ -1,5 +1,7 @@
 from django.db import models
 
+from usrapp.models.models import CustomUser
+
 """
 Veriler asagidaki siteden cekilecek:
 http://www.ozbeyfiziki.com/mobil/data2.txt
@@ -33,6 +35,7 @@ class Doviz(models.Model):
 
     class Meta:
         db_table = 'OZBEY_DOVIZ'
+        ordering = ['-update_date']
 
 
 class Makas(models.Model):
@@ -41,10 +44,12 @@ class Makas(models.Model):
     alis = models.FloatField(name='alis', verbose_name='Alış')
     satis = models.FloatField(name='satis', verbose_name='Satış')
     created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.created_date} ZAMANLI {self.kur} PARITESI \n' \
-               f'Alış : {self.alis} \n' \
+        return f'{self.kur} MAKASLARI \n' \
+               f'Zaman: {self.created_date}\n' \
+               f'Alış : {self.alis}\n' \
                f'Satış : {self.satis}'
 
     class Meta:

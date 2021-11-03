@@ -53,6 +53,9 @@ class MakasAPI(ModelViewSet):
     filter_backends = [
         filters.SearchFilter
     ]
-    search_fields = ['kur', 'created_date']
-    ordering_fields = ['kur', 'created_date']
+    search_fields = ['kur', 'created_date', 'created_by']
+    ordering_fields = ['kur', 'created_date', 'created_by']
     ordering = 'kur'
+    
+    def create(self, request, *args, **kwargs):
+        return super(MakasAPI, self).create(request, *args, **kwargs)

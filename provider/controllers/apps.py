@@ -6,5 +6,6 @@ class ProviderConfig(AppConfig):
     name = 'provider'
 
     def ready(self):
-        from provider.scheduled_tasks.ozbey import pull_data
+        # from provider.scheduled_tasks.ozbey import pull_data
+        from usrapp.models.models import CustomUser
         # pull_data()
