@@ -19,9 +19,13 @@ from rest_framework.authtoken import views
 
 from provider.controllers import urls as curls
 from usrapp.controllers import urls as uurls
+import debug_toolbar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('logs/', include('log_viewer.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
 
     path('auth/', views.obtain_auth_token),
 

@@ -1,11 +1,13 @@
+import logging
+
 from rest_framework import filters
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from provider.models.models import Doviz, Makas
 from provider.models.serializers import DovizSerializer, MakasSerializer
 from provider.views.paginations import StandardPagination
+
+logger = logging.getLogger(__name__)
 
 
 class DovizAPI(ModelViewSet):
@@ -34,6 +36,10 @@ class DovizAPI(ModelViewSet):
     def get_queryset(self):
         qset = Doviz.objects.all()
         param_filter = self.request.query_params.get('filter')
+
+        logger.info('The info message')
+        logger.warning('The warning message')
+        logger.error('The error message')
 
         # filtering
         if param_filter:

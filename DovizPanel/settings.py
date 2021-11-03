@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,11 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
     'rest_framework',
     'rest_framework.authtoken',
 
     'django_celery_beat',
-    'django_celery_results'
+    'django_celery_results',
+    'log_viewer',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'DovizPanel.urls'
@@ -141,6 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -151,7 +158,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
-
 
 # Celery Configuration Options
 CELERY_TIMEZONE = "Europe/Istanbul"
@@ -175,5 +181,39 @@ CORS_ORIGIN_WHITELIST = (
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 AUTH_USER_MODEL = 'usrapp.CustomUser'
+
+# LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'static/info.log',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# LOG VIEWER
+LOG_VIEWER_FILES = ['logfile1', 'logfile2', ...]
+LOG_VIEWER_FILES_PATTERN = '*.log*'
+LOG_VIEWER_FILES_DIR = 'static/'
+LOG_VIEWER_PAGE_LENGTH = 25  # total log lines per-page
+LOG_VIEWER_MAX_READ_LINES = 1000  # total log lines will be read
+LOG_VIEWER_PATTERNS = ['[INFO]', '[DEBUG]', '[WARNING]', '[ERROR]', '[CRITICAL]']
+# Optionally you can set the next variables in order to customize the admin:
+LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
+LOG_VIEWER_FILE_LIST_STYLES = "admin/css/base.css"
+
