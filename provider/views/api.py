@@ -1,6 +1,7 @@
 import logging
 
 from rest_framework import filters
+from rest_framework.exceptions import APIException
 from rest_framework.viewsets import ModelViewSet
 
 from provider.models.models import Doviz, Makas
@@ -25,27 +26,55 @@ class DovizAPI(ModelViewSet):
     ordering = 'source'
 
     @staticmethod
-    def standard_filter(qset):
+    def _style(_type):
         """
-        Applies standard filter on response as json
-        :param qset: Doviz.objects.all()
+        Reformat data based on style
+        :param _type:
+        * Mobil
+        * Web
+
         :return:
         """
-        return qset
+        if _type == 'mobil':
+            return Doviz.style.apply_mobil_style()
+
+        elif _type == 'web':
+            return Doviz.style.apply_web_style()
+
+        elif not _type:
+            return Doviz.style.no_style()
+
+        else:
+            raise APIException('Yanlış parametre: style \n'
+                               'Sadece web, mobil parametreleri destekleniyor.')
 
     def get_queryset(self):
-        qset = Doviz.objects.all()
-        param_filter = self.request.query_params.get('filter')
+        style = self.request.query_params.get('style')
+        content_type = self.request.content_type
 
+        # todo: logging test
         logger.info('The info message')
         logger.warning('The warning message')
         logger.error('The error message')
 
-        # filtering
-        if param_filter:
-            qset = self.standard_filter(qset)
+        # styling -> returns json
+        # if style and content_type == 'application/json':
+        #     qset = self._style(style)
+        #
+        # # default response
+        # else:
+        #     qset = Doviz.objects.all()
+        #
+        # return qset
+        return Doviz.makas_filter.filter_ozbey()
 
-        return qset
+
+    def retrieve(self, request, *args, **kwargs):
+        return super(DovizAPI, self).retrieve(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        data = super(DovizAPI, self).list(request, *args, **kwargs)
+        return data
 
 
 class MakasAPI(ModelViewSet):
@@ -62,6 +91,6 @@ class MakasAPI(ModelViewSet):
     search_fields = ['kur', 'created_date', 'created_by']
     ordering_fields = ['kur', 'created_date', 'created_by']
     ordering = 'kur'
-    
+
     def create(self, request, *args, **kwargs):
         return super(MakasAPI, self).create(request, *args, **kwargs, created_by=request.user)

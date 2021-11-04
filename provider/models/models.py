@@ -1,5 +1,6 @@
 from django.db import models
 
+from provider.models.managers import MakasFilter
 from usrapp.models.models import CustomUser
 
 """
@@ -27,6 +28,9 @@ class Doviz(models.Model):
     dusuk = models.FloatField(name='dusuk', verbose_name='Düşük')
     yuksek = models.FloatField(name='yuksek', verbose_name='Yüksek')
     source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı')
+
+    objects = models.Manager()
+    makas_filter = MakasFilter()
 
     def __str__(self):
         return f'{self.kur} \n ' \
