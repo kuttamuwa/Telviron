@@ -31,29 +31,21 @@ class DovizForm(forms.Form):
                              help_text='Tercihen'
                              )
 
+    def submit(self, **kwargs):
+        print("kwargs")
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
+        self.helper.form_class = 'form-vertical'
         self.helper.label_class = 'col-md-3'
         self.helper.field_class = 'col-md-9'
 
-        # self.helper.form_action
-        self.helper.form_tag = False
+        self.helper.form_action = self.submit
 
         self.helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
-
-        self.helper.layout = Layout(
-            Row(
-                Column('kur', css_class='form-group col-md-6 mb-0'),
-                Column('alis', css_class='form-group col-md-6 mb-0'),
-                Column('satis', css_class='form-group col-md-6 mb-0'),
-                Column('kaynak', css_class='form-group col-md-6 mb-0'),
-            ),
-
-        )
 
 
 

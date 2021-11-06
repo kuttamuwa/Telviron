@@ -1,6 +1,7 @@
-from provider.views.routers import router
-from provider.views.views import main_page, admin_page, kur_page, DovizView
 from django.urls import include, path
+
+from provider.views.routers import router
+from provider.views.views import main_page, DovizFormView, TabelaView
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -8,6 +9,6 @@ urlpatterns = [
     path('', main_page),
 
     # alt sayfalar
-    path('admin/', DovizView.as_view()),
-    path('kur/', kur_page),
+    path('admin/', DovizFormView.as_view()),
+    path('tabela/', TabelaView.as_view())
 ]

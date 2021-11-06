@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
 
 from provider.models.models import Doviz  # , Makas
 import logging
+
+from provider.scheduled_tasks.ozbey import ozbey_tarih_format
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +18,13 @@ class DovizSerializer(ModelSerializer):
         ret = super(DovizSerializer, self).to_representation(instance)
 
         return ret
+
+
+class HistorySerializer(Serializer):
+    kur = serializers.CharField()
+    old = serializers.FloatField()
+    new = serializers.FloatField()
+    update_date = serializers.DateTimeField(format=ozbey_tarih_format)
 
 # class MakasSerializer(ModelSerializer):
 #     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

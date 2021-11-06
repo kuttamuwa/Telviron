@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from celery import shared_task
 import requests
@@ -25,21 +25,22 @@ def pull_data():
 
     # data manipulation
     for kur, info in data.items():
+        tarih += timedelta(days=-4)
+
         try:
             # :WARNING : Ozbey'in sitesinde alis satis birbirinin yerineydi normalde,
             # bu sefer o degisikligi yapmadim
-
-            ozbey_data = Doviz(
+            ozbey_data = Doviz.objects.get_or_create(
                 kur=info['title'],
                 alis=float(info['alis'].replace(',', '.')),
                 satis=float(info['satis'].replace(',', '.')),
-                dusuk=float(info['dusuk'].replace(',', '.')),
-                yuksek=float(info['yuksek'].replace(',', '.')),
+                # dusuk=float(info['dusuk'].replace(',', '.')),
+                # yuksek=float(info['yuksek'].replace(',', '.')),
                 source='Ozbey',
                 update_date=tarih,
             )
-            ozbey_data.save()
-            print(f"Kaydedildi : {ozbey_data}")
+
+            print(f"Kaydedildi : {ozbey_data[0]}")
         except:  # todo: err: string indices must be integers
             if kur == ozbey_tarih_format:
                 pass
