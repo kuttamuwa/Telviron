@@ -6,4 +6,4 @@ router = routers.DefaultRouter(trailing_slash=True)
 
 router.register(r'doviz', DovizAPI)
 router.register(r'sarrafiye', SarrafiyeAPI)
-router.register(r'test', CalculatedSarrafiyeAPI)
+router.register(r'milyem', CalculatedSarrafiyeAPI)
