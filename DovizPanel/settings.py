@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'log_viewer',
     'phone_verify',
 
-    'bootstrap5',
+    'crispy_forms',
     'djoser',
 ]
 
@@ -253,3 +253,6 @@ PHONE_VERIFICATION = {
     "VERIFY_SECURITY_CODE_ONLY_ONCE": False,
     # If False, then a security code can be used multiple times for verification
 }
+
+# template - style
+CRISPY_TEMPLATE_PACK = 'uni_form'

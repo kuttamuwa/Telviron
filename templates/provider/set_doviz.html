@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
+    <form method="post" class="uniform">
+        {% csrf_token %}
+        {{ form|crispy }}
+    </form>
 
 {% endblock %}

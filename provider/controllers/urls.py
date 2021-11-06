@@ -1,5 +1,5 @@
 from provider.views.routers import router
-from provider.views.views import main_page, admin_page, kur_page
+from provider.views.views import main_page, admin_page, kur_page, DovizView
 from django.urls import include, path
 
 urlpatterns = [
@@ -8,6 +8,6 @@ urlpatterns = [
     path('', main_page),
 
     # alt sayfalar
-    path('admin/', admin_page),
+    path('admin/', DovizView.as_view()),
     path('kur/', kur_page),
 ]
