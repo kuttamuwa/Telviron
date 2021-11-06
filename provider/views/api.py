@@ -16,7 +16,7 @@ class DovizAPI(ModelViewSet):
     queryset = Doviz.objects.all()
     serializer_class = DovizSerializer
     permission_classes = [
-        IsAuthenticated
+        # IsAuthenticated
     ]
     pagination_class = StandardPagination
     filter_backends = [

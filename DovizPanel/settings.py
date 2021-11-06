@@ -173,6 +173,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+DJOSER = {
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.IsAuthenticated'],
+    }
+}
 
 # Celery Configuration Options
 CELERY_TIMEZONE = "Europe/Istanbul"
