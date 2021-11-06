@@ -22,9 +22,12 @@ class DovizSerializer(ModelSerializer):
 
 class HistorySerializer(Serializer):
     kur = serializers.CharField()
-    old = serializers.FloatField()
-    new = serializers.FloatField()
-    update_date = serializers.DateTimeField(format=ozbey_tarih_format)
+
+    eski_alis = serializers.FloatField()
+    yeni_alis = serializers.FloatField()
+
+    eski_tarih = serializers.DateTimeField(format=ozbey_tarih_format)
+    yeni_tarih = serializers.DateTimeField(format=ozbey_tarih_format)
 
 # class MakasSerializer(ModelSerializer):
 #     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

@@ -53,6 +53,14 @@ class TabelaView(APIView):
 
     ]
 
+    @staticmethod
+    def df_compare_style(data: pd.DataFrame):
+        df_grouped = data.groupby('Kur')
+        # _dict = {'Kur': row['Kur'], 'Yeni değer': row['Alış'], 'Son tarih': row['Son tarih']}
+
+        for row in df_grouped.iterrows():
+            print(row)
+
     def get_historical(self, request, format=None):
         """
 
@@ -71,6 +79,20 @@ class TabelaView(APIView):
                                   'alis': 'Alış', 'satis': 'Satış'}, inplace=True)
         latest_df.drop(columns=['index'], inplace=True)
 
+        # to serialize
+        _list = []
+        for k, v in latest_df.groupby('Kur'):
+            new = v.iloc[0]
+            old = v.iloc[1]
+
+            data = {'kur': k,
+                    'eski_alis': old['Alış'], #'Eski Satış': old['Satış'],
+                    'yeni_alis': new['Alış'], #'Yeni Satış': new['Satış'],
+                    'eski_tarih': old['Son tarih'], 'yeni_tarih': new['Son tarih']}
+            _list.append(data)
+
+        serializer = HistorySerializer(_list, many=True)
+
         # pandas : styling
         df_html = latest_df.style.format({'Alış': "{:.3f}",
                                           'Satış': "{:.3f}",
@@ -83,7 +105,8 @@ class TabelaView(APIView):
         df_html = df_html.render()
 
         # rendering
-        return render(request, 'provider/get_doviz.html', {'df': df_html})
+        return Response(serializer.data, template_name='provider/get_doviz.html')
+        # return render(request, 'provider/get_doviz.html', {'df': df_html})
 
     def get_pure(self, request, format=None):
         qset = Doviz.objects.all()
