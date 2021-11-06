@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from provider.models.models import Doviz, Makas
+from provider.models.models import Doviz  # , Makas
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,19 +17,18 @@ class DovizSerializer(ModelSerializer):
 
         return ret
 
-
-class MakasSerializer(ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    created_by = serializers.ReadOnlyField(source='created_by.username')
-    kur = serializers.SlugRelatedField(many=False, read_only=False, slug_field='kur',
-                                       queryset=Doviz.objects.all())
-
-    def create(self, validated_data):
-        validated_data['created_by'] = validated_data.pop('user')
-        logger.info(f'Yeni makas değeri : {validated_data}')
-
-        return super(MakasSerializer, self).create(validated_data)
-
-    class Meta:
-        model = Makas
-        fields = '__all__'
+# class MakasSerializer(ModelSerializer):
+#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     created_by = serializers.ReadOnlyField(source='created_by.username')
+#     kur = serializers.SlugRelatedField(many=False, read_only=False, slug_field='kur',
+#                                        queryset=Doviz.objects.all())
+#
+#     def create(self, validated_data):
+#         validated_data['created_by'] = validated_data.pop('user')
+#         logger.info(f'Yeni makas değeri : {validated_data}')
+#
+#         return super(MakasSerializer, self).create(validated_data)
+#
+#     class Meta:
+#         model = Makas
+#         fields = '__all__'

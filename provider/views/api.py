@@ -4,8 +4,8 @@ from rest_framework import filters
 from rest_framework.exceptions import APIException
 from rest_framework.viewsets import ModelViewSet
 
-from provider.models.models import Doviz, Makas
-from provider.models.serializers import DovizSerializer, MakasSerializer
+from provider.models.models import Doviz  # , Makas
+from provider.models.serializers import DovizSerializer  # , MakasSerializer
 from provider.views.paginations import StandardPagination
 
 logger = logging.getLogger(__name__)
@@ -24,29 +24,6 @@ class DovizAPI(ModelViewSet):
     search_fields = ['source', 'kur']
     ordering_fields = ['source', 'kur']
     ordering = 'source'
-
-    @staticmethod
-    def _style(_type):
-        """
-        Reformat data based on style
-        :param _type:
-        * Mobil
-        * Web
-
-        :return:
-        """
-        if _type == 'mobil':
-            return Doviz.style.apply_mobil_style()
-
-        elif _type == 'web':
-            return Doviz.style.apply_web_style()
-
-        elif not _type:
-            return Doviz.style.no_style()
-
-        else:
-            raise APIException('Yanlış parametre: style \n'
-                               'Sadece web, mobil parametreleri destekleniyor.')
 
     def get_queryset(self):
         style = self.request.query_params.get('style')
@@ -68,7 +45,6 @@ class DovizAPI(ModelViewSet):
         # return qset
         return Doviz.makas_filter.filter_ozbey()
 
-
     def retrieve(self, request, *args, **kwargs):
         return super(DovizAPI, self).retrieve(request, *args, **kwargs)
 
@@ -77,20 +53,20 @@ class DovizAPI(ModelViewSet):
         return data
 
 
-class MakasAPI(ModelViewSet):
-    queryset = Makas.objects.all()
-    serializer_class = MakasSerializer
-    permission_classes = [
-
-    ]
-
-    pagination_class = StandardPagination
-    filter_backends = [
-        filters.SearchFilter
-    ]
-    search_fields = ['kur', 'created_date', 'created_by']
-    ordering_fields = ['kur', 'created_date', 'created_by']
-    ordering = 'kur'
-
-    def create(self, request, *args, **kwargs):
-        return super(MakasAPI, self).create(request, *args, **kwargs, created_by=request.user)
+# class MakasAPI(ModelViewSet):
+#     queryset = Makas.objects.all()
+#     serializer_class = MakasSerializer
+#     permission_classes = [
+#
+#     ]
+#
+#     pagination_class = StandardPagination
+#     filter_backends = [
+#         filters.SearchFilter
+#     ]
+#     search_fields = ['kur', 'created_date', 'created_by']
+#     ordering_fields = ['kur', 'created_date', 'created_by']
+#     ordering = 'kur'
+#
+#     def create(self, request, *args, **kwargs):
+#         return super(MakasAPI, self).create(request, *args, **kwargs, created_by=request.user)

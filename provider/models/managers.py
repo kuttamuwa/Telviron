@@ -3,6 +3,7 @@ from django.db import models
 
 import pandas as pd
 
+
 # from provider.models.models import Makas
 
 
@@ -66,6 +67,4 @@ class MakasFilter(models.Manager):
         # makas_qset = Makas.objects.order_by('kur')
         # makas_df = pd.DataFrame(makas_qset.values())
 
-
         return df
-

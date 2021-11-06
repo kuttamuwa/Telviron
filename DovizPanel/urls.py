@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
 
+from DovizPanel.views import main_page
 from provider.controllers import urls as curls
 from usrapp.controllers import urls as uurls
 import debug_toolbar
 
 urlpatterns = [
+    # home urls
+    path('', main_page),
+
     path('admin/', admin.site.urls),
 
     path('logs/', include('log_viewer.urls')),
