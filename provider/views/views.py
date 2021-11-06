@@ -22,6 +22,7 @@ from rest_pandas.serializers import PandasSerializer
 
 from provider.models.models import Doviz
 from provider.models.serializers import DovizSerializer, HistorySerializer
+from provider.views.renderers import TabelaRenderer
 
 
 def main_page(request):
@@ -48,6 +49,7 @@ class TabelaView(APIView):
 
     renderer_classes = [
         AdminRenderer,
+        TabelaRenderer
 
     ]
 
@@ -58,14 +60,18 @@ class TabelaView(APIView):
         :param format:
         :return:
         """
+        # django ORM
         historical_doviz = Doviz.objects.values('kur', 'update_date', 'alis', 'satis')
+
+        # pandas
         df = pd.DataFrame(historical_doviz)
         latest_df = df.sort_values('update_date').groupby('kur').head(2)  # last 2
         latest_df.reset_index(inplace=True)
-
         latest_df.rename(columns={'kur': 'Kur', 'update_date': 'Son tarih',
                                   'alis': 'Alış', 'satis': 'Satış'}, inplace=True)
+        latest_df.drop(columns=['index'], inplace=True)
 
+        # pandas : styling
         df_html = latest_df.style.format({'Alış': "{:.3f}",
                                           'Satış': "{:.3f}",
                                           'Son tarih': "{:%Y-%m-%d}"}).set_table_styles([
@@ -74,13 +80,10 @@ class TabelaView(APIView):
             {"selector": "tbody td", "props": [("border", "1px solid grey")]},
             {"selector": "th", "props": [("border", "1px solid grey")]}
         ])
-        df_html = df_html.hide_index()
+        df_html = df_html.render()
 
-        return render(request, 'provider/get_doviz.html', {'df': df_html.render()})
-
-        # return Response(
-        #     latest_df.to_html(), template_name='provider/get_doviz.html'
-        # )
+        # rendering
+        return render(request, 'provider/get_doviz.html', {'df': df_html})
 
     def get_pure(self, request, format=None):
         qset = Doviz.objects.all()
