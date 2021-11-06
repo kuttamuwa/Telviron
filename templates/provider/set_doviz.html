@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
-
+{#{% load crispy_forms_filters %}#}
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <form method="post" class="uniform">
-        {% csrf_token %}
-        {{ form|crispy }}
-    </form>
+    <div class="py-5 text-center">
 
+    </div>
+    <div class="row">
+        <div class="d-flex justify-content-center">
+            <form method="post" class="uniform">
+                {% csrf_token %}
+                <table> {{ form|crispy }}</table>
+                <button class="btn btn-primary btn-lg btn-block" type="submit" >
+                    Kaydet
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

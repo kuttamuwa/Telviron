@@ -255,4 +255,4 @@ PHONE_VERIFICATION = {
 }
 
 # template - style
-CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

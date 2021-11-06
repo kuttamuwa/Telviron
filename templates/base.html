@@ -10,6 +10,14 @@
 
 </html>
 
+{% for message in messages %}
+    <div class="container-fluid p-0">
+          <div class="alert alert-success" role="alert">
+           {{ message }}
+        </div>
+    </div>
+{% endfor %}
+
 <body>
 {% block content %}
 
