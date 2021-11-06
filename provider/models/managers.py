@@ -1,7 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 
-import pandas as pd
+# import pandas as pd
 
 
 # from provider.models.models import Makas
@@ -50,21 +50,21 @@ class MakasFilter(models.Manager):
 
     def filter(self, *args, **kwargs):
         qset = super(MakasFilter, self).filter(*args, **kwargs)
-        df = pd.Dataframe(qset.values())
+        # df = pd.Dataframe(qset.values())
 
-        return df
+        return qset
 
     def get_queryset(self):
         qset = super(MakasFilter, self).get_queryset()
-        df = pd.Dataframe(qset.values())
+        # df = pd.Dataframe(qset.values())
 
-        return df
+        return qset
 
     def filter_ozbey(self):
         qset = self.filter(source='Ozbey')
-        df = pd.DataFrame(qset.values())
+        # df = pd.DataFrame(qset.values())
 
         # makas_qset = Makas.objects.order_by('kur')
         # makas_df = pd.DataFrame(makas_qset.values())
 
-        return df
+        return qset

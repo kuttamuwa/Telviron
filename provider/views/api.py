@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import filters
 from rest_framework.exceptions import APIException
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from provider.models.models import Doviz  # , Makas
@@ -15,7 +16,7 @@ class DovizAPI(ModelViewSet):
     queryset = Doviz.objects.all()
     serializer_class = DovizSerializer
     permission_classes = [
-
+        IsAuthenticated
     ]
     pagination_class = StandardPagination
     filter_backends = [

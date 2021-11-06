@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'phone_verify',
 
     'bootstrap5',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -164,7 +165,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 # Celery Configuration Options
@@ -238,5 +245,6 @@ PHONE_VERIFICATION = {
     "MESSAGE": "Welcome to {app}! Please use security code {security_code} to proceed.",
     "APP_NAME": "Phone Verify",
     "SECURITY_CODE_EXPIRATION_TIME": 3600,  # In seconds only
-    "VERIFY_SECURITY_CODE_ONLY_ONCE": False,  # If False, then a security code can be used multiple times for verification
+    "VERIFY_SECURITY_CODE_ONLY_ONCE": False,
+    # If False, then a security code can be used multiple times for verification
 }
