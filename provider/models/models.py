@@ -42,22 +42,22 @@ class Doviz(models.Model):
         ordering = ['-update_date']
 
 
-# class Makas(models.Model):
-#     kur = models.OneToOneField(Doviz, on_delete=models.PROTECT)
-#
-#     alis = models.FloatField(name='alis', verbose_name='Alış')
-#     satis = models.FloatField(name='satis', verbose_name='Satış')
-#     created_date = models.DateTimeField(auto_now_add=True)
-#     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return f'{self.kur} MAKASLARI \n' \
-#                f'Zaman: {self.created_date}\n' \
-#                f'Alış : {self.alis}\n' \
-#                f'Satış : {self.satis}'
-#
-#     def __repr__(self):
-#         return self.__str__()
-#
-#     class Meta:
-#         db_table = 'MAKAS'
+class SarrafiyeMilyem(models.Model):
+    kur = models.CharField(name='kur', verbose_name='Kur', max_length=10)
+
+    alis = models.FloatField(name='alis', verbose_name='Alış')
+    satis = models.FloatField(name='satis', verbose_name='Satış')
+    created_date = models.DateTimeField(auto_now_add=True)
+    source = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.kur} Sarrafiye \n' \
+               f'Zaman: {self.created_date}\n' \
+               f'Alış : {self.alis}\n' \
+               f'Satış : {self.satis}'
+
+    def __repr__(self):
+        return self.__str__()
+
+    class Meta:
+        db_table = 'SARRAFIYE_MILYEM'

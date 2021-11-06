@@ -10,5 +10,5 @@ urlpatterns = [
 
     # alt sayfalar
     path('admin/', DovizFormView.as_view()),
-    path('tabela/', TabelaView.as_view())
+    path('tabela/', TabelaView.as_view()),
 ]

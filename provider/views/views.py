@@ -9,6 +9,7 @@ from django.contrib import messages
 # Create your views here.
 from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView
+from rest_framework.decorators import api_view
 from rest_framework.renderers import TemplateHTMLRenderer, AdminRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
