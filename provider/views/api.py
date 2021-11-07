@@ -30,25 +30,14 @@ class DovizAPI(ModelViewSet):
     ordering_fields = ['source', 'kur']
     ordering = 'source'
 
-    # def get_queryset(self):
-    #     style = self.request.query_params.get('style')
-    #     content_type = self.request.content_type
-    #
-    #     # todo: logging test
-    #     logger.info('The info message')
-    #     logger.warning('The warning message')
-    #     logger.error('The error message')
-    #
-    #     # styling -> returns json
-    #     # if style and content_type == 'application/json':
-    #     #     qset = self._style(style)
-    #     #
-    #     # # default response
-    #     # else:
-    #     #     qset = Doviz.objects.all()
-    #     #
-    #     # return qset
-    #     return Doviz.makas_filter.filter_ozbey()
+    def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        usr = request.user.username
+        if usr == '':
+            usr = 'Bilinmiyor'
+
+        request.data['source'] = usr
+        return super(DovizAPI, self).create(request, *args, **kwargs)
 
 
 class SarrafiyeAPI(ModelViewSet):
@@ -58,7 +47,7 @@ class SarrafiyeAPI(ModelViewSet):
 
     ]
 
-    pagination_class = StandardPagination
+    # pagination_class = StandardPagination
     filter_backends = [
         filters.SearchFilter
     ]
@@ -67,12 +56,17 @@ class SarrafiyeAPI(ModelViewSet):
     ordering = 'kur'
 
     def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        usr = request.user.username
+        if usr == '':
+            usr = 'Bilinmiyor'
+
+        request.data['source'] = usr
+
         return super(SarrafiyeAPI, self).create(request, *args, **kwargs, created_by=request.user)
 
 
-class CalculatedSarrafiyeAPI(viewsets.ViewSet):
-    queryset = Doviz.objects.all()
-
+class HesaplananSarrafiyeAPI(viewsets.ViewSet):
     def list(self, request, *args, **kwargs):
         kgrtry = Doviz.objects.get(kur__exact='KGRTRY')
         kgrtry_alis = kgrtry.alis
@@ -90,12 +84,9 @@ class CalculatedSarrafiyeAPI(viewsets.ViewSet):
             # to serialize
             _list = []
             for _, v in df.iterrows():
-                # new = v.iloc[0]
-                # old = v.iloc[1]
-
                 data = {'kur': v['Kur'],
-                        'alis': v['Alış'],  # 'Eski Satış': old['Satış'],
-                        'satis': v['Satış'],  # 'Yeni Satış': new['Satış'],
+                        'alis': v['Alış'],
+                        'satis': v['Satış'],
                         }
                 _list.append(data)
 
