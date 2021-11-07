@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -15,9 +16,11 @@ class CustomUser(AbstractUser):
 
 
 class PhoneSMSVerify(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     code = models.CharField(max_length=10, name='code')
-    session_token = models.CharField(max_length=40, name='token')
+
+    access_token = models.CharField(max_length=40, name='access')
+    refresh_token = models.CharField(max_length=40, name='refresh')
 
     class Meta:
         db_table = 'PhoneSMS'
