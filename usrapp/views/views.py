@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from usrapp.models.models import PhoneSMSVerify
+from usrapp.models.models import PhoneSMSVerify, CustomUser
 from usrapp.models.serializers import CustomUserSerializer
 
 
@@ -35,6 +35,7 @@ class LoginView(APIView):
 
         # sms sending
         sifre = self.send_sms(phone_number)
+        print(f"şifre : {sifre}")
 
         # save token and sms code
         phone_sms = PhoneSMSVerify.objects.update_or_create(user=user, code=sifre,
@@ -57,10 +58,13 @@ class LoginView(APIView):
 
 class SMSView(APIView):
     def post(self, request, format=None):
-        usr = request.user
+        usr = request.session['user']
         sifre = request.POST['sifre']
         print(f"Sifre : {sifre}")
-        phone_sms = PhoneSMSVerify.objects.get(user=request.user, code=sifre)
+        # TODO: SESSION ICINDE GONDERMEYELIM !
+        CustomUser(usr)
+
+        phone_sms = PhoneSMSVerify.objects.get(user=usr, code=sifre)
 
         return Response({
             'access': phone_sms.access_token,
