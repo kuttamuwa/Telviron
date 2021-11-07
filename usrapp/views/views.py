@@ -9,3 +9,5 @@ def main_page(request):
     )
 
 
+def login_page(request):
+    return render(request, 'login.html')

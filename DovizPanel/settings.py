@@ -243,8 +243,8 @@ PHONE_VERIFICATION = {
     "OPTIONS": {
         "SID": "fake",
         "SECRET": "fake",
-        "FROM": "+14755292729",
-        "SANDBOX_TOKEN": "123456",
+        "FROM": "+905323028251",
+        "SMS_KEY": "568SYR",
     },
     "TOKEN_LENGTH": 6,
     "MESSAGE": "Welcome to {app}! Please use security code {security_code} to proceed.",

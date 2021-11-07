@@ -20,23 +20,8 @@ def current_user(request):
     return Response(serializer.data)
 
 
-class UsersAPI(APIView):
-    permission_classes = [
-        permissions.AllowAny,
-        permissions.IsAdminUser
-    ]
-
-
-class GroupAPI(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [
-        permissions.IsAdminUser
-    ]
-
-
 class DumanVerificationViewSet(VerificationViewSet):
-    # serializer_class = DumanSMSVerificationSerializer
+    serializer_class = DumanSMSVerificationSerializer
 
     @action(
         detail=False,
