@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4ae59ce2-4fb7-43df-9af6-9f260aa72240",
+		"_postman_id": "e44e9d67-1430-401f-8098-d288a8f57ace",
 		"name": "DovizPanel",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -26,7 +26,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/auth/token/login",
+					"raw": "http://127.0.0.1:8000/usrapp/token/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -36,9 +36,9 @@
 					],
 					"port": "8000",
 					"path": [
-						"auth",
+						"usrapp",
 						"token",
-						"login"
+						""
 					]
 				}
 			},
@@ -93,9 +93,8 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Token acc374d6c55d1992f541d149c71f4fecf6925de9",
-						"type": "text",
-						"disabled": true
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -122,7 +121,13 @@
 			"name": "Doviz ekle",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
@@ -167,7 +172,13 @@
 			"name": "Get Hesaplanan Sarrafiye",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://127.0.0.1:8000/provider/api/milyem/",
 					"protocol": "http",
@@ -192,7 +203,13 @@
 			"name": "Sarrafiye ekle",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://127.0.0.1:8000/provider/api/doviz/?kur=KGRTRY&alis=566365&satis=566949",
 					"protocol": "http",
@@ -231,7 +248,13 @@
 			"name": "Milyem ekle",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
@@ -266,6 +289,39 @@
 						"provider",
 						"api",
 						"sarrafiye",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Current User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/usrapp/current_user/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"usrapp",
+						"current_user",
 						""
 					]
 				}
