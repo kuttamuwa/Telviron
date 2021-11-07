@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "4ae59ce2-4fb7-43df-9af6-9f260aa72240",
+		"name": "DovizPanel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Token admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "figo1190",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/token/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"token",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authentication Token testuser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "figo1190",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/token/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"token",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Doviz",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token acc374d6c55d1992f541d149c71f4fecf6925de9",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Doviz ekle",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "USDTRY",
+							"type": "text"
+						},
+						{
+							"key": "alis",
+							"value": "9.7",
+							"type": "text"
+						},
+						{
+							"key": "satis",
+							"value": "9.5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Hesaplanan Sarrafiye",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/milyem/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"milyem",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sarrafiye ekle",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz/?kur=KGRTRY&alis=566365&satis=566949",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz",
+						""
+					],
+					"query": [
+						{
+							"key": "kur",
+							"value": "KGRTRY"
+						},
+						{
+							"key": "alis",
+							"value": "566365"
+						},
+						{
+							"key": "satis",
+							"value": "566949"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Milyem ekle",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "Gram",
+							"type": "text"
+						},
+						{
+							"key": "alis",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "satis",
+							"value": "0.9",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/sarrafiye/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"sarrafiye",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
