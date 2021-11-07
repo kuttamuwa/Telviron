@@ -20,9 +20,9 @@ class DovizAPI(ModelViewSet):
     queryset = Doviz.objects.all()
     serializer_class = DovizSerializer
     permission_classes = [
-        # IsAuthenticated
+        IsAuthenticated
     ]
-    pagination_class = StandardPagination
+    # pagination_class = StandardPagination
     filter_backends = [
         filters.SearchFilter
     ]
@@ -44,7 +44,7 @@ class SarrafiyeAPI(ModelViewSet):
     queryset = SarrafiyeMilyem.objects.all()
     serializer_class = SarrafiyeMilyemSerializer
     permission_classes = [
-
+        IsAuthenticated
     ]
 
     # pagination_class = StandardPagination
@@ -67,6 +67,10 @@ class SarrafiyeAPI(ModelViewSet):
 
 
 class HesaplananSarrafiyeAPI(viewsets.ViewSet):
+    permission_classes = [
+        IsAuthenticated
+    ]
+
     def list(self, request, *args, **kwargs):
         kgrtry = Doviz.objects.get(kur__exact='KGRTRY')
         kgrtry_alis = kgrtry.alis

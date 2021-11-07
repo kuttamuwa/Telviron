@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
@@ -22,5 +23,5 @@ class GroupSerializer(ModelSerializer):
 
 class CustomUserSerializer(ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = '__all__'
+        model = get_user_model()
+        fields = ('id', 'username')

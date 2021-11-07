@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer, AdminRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -45,7 +46,7 @@ class TabelaView(APIView):
 
     ]
     permission_classes = [
-
+        IsAuthenticated
     ]
 
     renderer_classes = [
