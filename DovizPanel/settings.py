@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '51.89.186.228', 'panel.gunesdoviz.com']
 INSTALLED_APPS = [
     'corsheaders',
 
+    # site applications
     'usrapp.controllers.apps.UsrappConfig',
     'provider.controllers.apps.ProviderConfig',
 
@@ -44,17 +45,22 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
 
+    # rest
     'rest_framework',
     'rest_framework.authtoken',
 
+    # celery
     'django_celery_beat',
     'django_celery_results',
 
+    # logging
     'log_viewer',
-    'phone_verify',
 
+    # template, form
     'crispy_forms',
-    'djoser',
+
+    # authentication
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -170,7 +176,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
 }
 DJOSER = {
@@ -236,23 +243,6 @@ LOG_VIEWER_PATTERNS = ['[INFO]', '[DEBUG]', '[WARNING]', '[ERROR]', '[CRITICAL]'
 # Optionally you can set the next variables in order to customize the admin:
 LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
 LOG_VIEWER_FILE_LIST_STYLES = "admin/css/base.css"
-
-# Phone
-PHONE_VERIFICATION = {
-    "BACKEND": "usrapp.sms_service.service.DumanService",
-    "OPTIONS": {
-        "SID": "fake",
-        "SECRET": "fake",
-        "FROM": "+905323028251",
-        "SMS_KEY": "568SYR",
-    },
-    "TOKEN_LENGTH": 6,
-    "MESSAGE": "Welcome to {app}! Please use security code {security_code} to proceed.",
-    "APP_NAME": "Phone Verify",
-    "SECURITY_CODE_EXPIRATION_TIME": 3600,  # In seconds only
-    "VERIFY_SECURITY_CODE_ONLY_ONCE": False,
-    # If False, then a security code can be used multiple times for verification
-}
 
 # template - style
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

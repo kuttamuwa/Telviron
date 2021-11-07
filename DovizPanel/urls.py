@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
 
-from DovizPanel.views import main_page, CustomAuthToken
+from DovizPanel.views import main_page
 from provider.controllers import urls as curls
 from usrapp.controllers import urls as uurls
 import debug_toolbar
@@ -30,10 +30,6 @@ urlpatterns = [
 
     path('logs/', include('log_viewer.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-
-    # path('auth/', CustomAuthToken.as_view()),
-    path(r'auth/', include('djoser.urls')),
-    path(r'auth/', include('djoser.urls.authtoken')),
 
     path('usrapp/', include(uurls)),
     path('provider/', include(curls)),
