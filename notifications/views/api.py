@@ -7,7 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from notifications.forms.registration.telegram import TelegramRegisterForm
 from notifications.models.models import Exchanges, CryptoAsset, WatchCryptoAsset, TelegramNotification
-from notifications.models.serializers import ExchangeSerializer, CryptoAssetSerializer, WatchAssetSerializer
+from notifications.models.serializers import ExchangeSerializer, CryptoAssetSerializer, WatchAssetSerializer, \
+    TelegramNotificationSerializer
 
 
 class ExchangeAPI(ModelViewSet):
@@ -58,14 +59,15 @@ class WatchAssetAPI(ModelViewSet):
     ordering_fields = ['name']
 
 
-class TelegramRegisterAPI(APIView):
+class TelegramRegisterAPI(ModelViewSet):
     queryset = TelegramNotification.objects.all()
+    serializer_class = TelegramNotificationSerializer
 
     authentication_classes = [
-
+        # IsAuthenticated
     ]
     permission_classes = [
-        IsAuthenticated
+        # IsAuthenticated
     ]
 
     renderer_classes = [
