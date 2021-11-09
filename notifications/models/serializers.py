@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 
-from notifications.models.models import Exchanges, CryptoAsset, WatchAsset
+from notifications.models.models import Exchanges, CryptoAsset, WatchCryptoAsset
 
 
 class ExchangeSerializer(ModelSerializer):
@@ -19,4 +19,4 @@ class CryptoAssetSerializer(ModelSerializer):
 class WatchAssetSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
-        model = WatchAsset
+        model = WatchCryptoAsset

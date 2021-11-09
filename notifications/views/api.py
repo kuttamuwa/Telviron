@@ -2,7 +2,7 @@ from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from notifications.models.models import Exchanges, CryptoAsset, WatchAsset
+from notifications.models.models import Exchanges, CryptoAsset, WatchCryptoAsset
 from notifications.models.serializers import ExchangeSerializer, CryptoAssetSerializer, WatchAssetSerializer
 
 
@@ -39,7 +39,7 @@ class CryptoAssetAPI(ModelViewSet):
 
 
 class WatchAssetAPI(ModelViewSet):
-    queryset = WatchAsset.objects.all()
+    queryset = WatchCryptoAsset.objects.all()
     serializer_class = WatchAssetSerializer
 
     permission_classes = [

@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import AdminRenderer
 from rest_framework.views import APIView
 
-from notifications.models.models import Exchanges, CryptoAsset, WatchAsset
+from notifications.models.models import Exchanges, CryptoAsset, WatchCryptoAsset
 
 
 class ExchangeView(APIView):
@@ -39,7 +39,7 @@ class CryptoAssetView(APIView):
 
 
 class WatchAssetView(APIView):
-    queryset = WatchAsset.objects.all()
+    queryset = WatchCryptoAsset.objects.all()
 
     authentication_classes = [
 

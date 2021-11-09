@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     # site applications
     'usrapp.controllers.apps.UsrappConfig',
     'provider.controllers.apps.ProviderConfig',
+    'notifications.controllers.apps.NotificationsConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
