@@ -83,7 +83,7 @@ class TelegramRegisterView(FormView):
         return response
 
     def get_success_message(self, cleaned_data):
-        return self.success_message.format(doviz=cleaned_data.get('kur'))
+        return self.success_message.format(TelegramNotification=cleaned_data.get('TelegramNotification'))
 
     def get_success_url(self):
         return self.request.path

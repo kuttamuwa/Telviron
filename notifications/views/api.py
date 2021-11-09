@@ -1,6 +1,8 @@
 from django.views.generic import FormView
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import AdminRenderer
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from notifications.forms.registration.telegram import TelegramRegisterForm
@@ -54,6 +56,22 @@ class WatchAssetAPI(ModelViewSet):
 
     search_fields = ['name']
     ordering_fields = ['name']
+
+
+class TelegramRegisterAPI(APIView):
+    queryset = TelegramNotification.objects.all()
+
+    authentication_classes = [
+
+    ]
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    renderer_classes = [
+        AdminRenderer
+
+    ]
 
 
 class TelegramRegisterView(FormView):

@@ -6,6 +6,6 @@ from notifications.views.views import TelegramRegisterView
 urlpatterns = [
     path('api/', include(router.urls)),
 
-    path('register/telegram', TelegramRegisterView.as_view()),
+    path('register/telegram/', TelegramRegisterView.as_view()),
 
 ]
