@@ -11,6 +11,8 @@ class ExchangeSerializer(ModelSerializer):
 
 
 class CryptoAssetSerializer(ModelSerializer):
+    # exchanges = serializers.CharField(source='exchanges.name')
+
     class Meta:
         fields = '__all__'
         model = CryptoAsset

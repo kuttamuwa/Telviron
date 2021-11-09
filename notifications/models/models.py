@@ -39,11 +39,11 @@ class Exchanges(models.Model):
 
 # Asset Models
 class BaseAsset(models.Model):
-    name = models.CharField(max_length=10, name='Name', verbose_name='Name',
+    name = models.CharField(max_length=10, name='name', verbose_name='Name',
                             help_text='Ex: Bitcoin, Etherium, Solana etc.')
-    symbol = models.CharField(max_length=10, name='Symbol', verbose_name='Symbol',
+    symbol = models.CharField(max_length=10, name='symbol', verbose_name='Symbol',
                               help_text='Attention: /USD parity will be analyzed. Ex: BTC, ETH, SOL etc. ')
-    exchanges = models.ForeignKey(Exchanges, on_delete=models.CASCADE)
+    exchanges = models.ForeignKey(Exchanges, on_delete=models.CASCADE, name='exchanges')
 
     def __str__(self):
         return f"Asset : {self.name}"
