@@ -46,7 +46,7 @@ class SarrafiyeMilyem(models.Model):
     alis = models.FloatField(name='alis', verbose_name='Alış')
     satis = models.FloatField(name='satis', verbose_name='Satış')
     created_date = models.DateTimeField(auto_now_add=True)
-    source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı')
+    source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı', null=True)
 
     def __str__(self):
         return f'{self.kur} Sarrafiye \n' \
