@@ -4,9 +4,10 @@ Telegram Notification Service
 """
 from telegram.ext import Updater, CommandHandler, MessageHandler, filters, Filters
 
-from notifications.models.models import TelegramNotification
+from notifications.models.models import TelegramNotification, WatchCryptoAsset, CryptoAsset
 import telegram
 
+from notifications.services.image.manipulator import ImageManipulator
 from provider.models.models import Doviz, SarrafiyeMilyem
 from usrapp.models.models import CustomUser
 
@@ -61,16 +62,19 @@ class TelegramDataService:
     @staticmethod
     def add_milyem(update, context):
         user = update.effective_chat.username
-        kur, alis, satis = context.args
 
-        sarrafiye_milyem = SarrafiyeMilyem.objects.get_or_create(
-            kur=kur,
-            alis=alis,
-            satis=satis,
-            source=user
+        symbol = context.args[0]
+        asset = CryptoAsset.objects.get(symbol=symbol)
+
+        sarrafiye_milyem = WatchCryptoAsset.objects.get_or_create(
+            asset=asset,
+            creator=user
         )
+        generated_funny = ImageManipulator.generate_funny_crypto(f"{symbol} ADDED")
 
-        update.message.reply_text(f'Milyem makası güncellendi ! : {sarrafiye_milyem[0]}')
+        update.message.reply_photo(
+            open(generated_funny, 'rb')
+        )
 
     def set_updater(self):
         updater = Updater(token=self.bot.token, use_context=True)

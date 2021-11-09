@@ -66,7 +66,7 @@ class WatchCryptoAsset(models.Model):
     asset = models.ForeignKey(CryptoAsset, on_delete=models.CASCADE)
 
     created_date = models.DateTimeField(auto_now_add=True, name='created_date', verbose_name='Created Date')
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    creator = models.CharField(name='creator', max_length=50)
 
     manager = WatchManager
 
