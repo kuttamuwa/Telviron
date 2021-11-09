@@ -7,5 +7,6 @@ class ProviderConfig(AppConfig):
 
     def ready(self):
         from provider.scheduled_tasks.ozbey import pull_data
+        from provider.services.prices import check_alert_bsw
         from usrapp.models.models import CustomUser
         # pull_data()
