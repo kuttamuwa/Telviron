@@ -1,7 +1,8 @@
-from django.contrib.auth.management.commands.createsuperuser import Command
 from django.core.management import BaseCommand
 
-from usrapp.models.models import CustomUser
+"""
+This code does not work. However, it is helpful to start custom commands. management/commands hieararchy is must.
+"""
 
 
 class CustomCommand(BaseCommand):
