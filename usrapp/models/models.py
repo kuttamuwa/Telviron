@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'telephone']
 
 
 class PhoneSMSVerify(models.Model):

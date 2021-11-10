@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from notifications.models.managers import BaseNotificationManager, WatchManager
+from notifications.models.managers import BaseNotificationManager
 from usrapp.models.models import CustomUser
 
 
