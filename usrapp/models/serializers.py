@@ -6,7 +6,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .fields import DumanPhoneNumberField
-from .models import CustomUser
+from .models import CustomUser, PhoneSMSVerify
 
 
 class UserSerializer(ModelSerializer):
@@ -25,3 +25,9 @@ class CustomUserSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('id', 'username')
+
+
+class PhoneSMSSerializer(ModelSerializer):
+    class Meta:
+        model = PhoneSMSVerify
+        fields = '__all__'

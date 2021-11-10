@@ -2,19 +2,23 @@ import random
 
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from usrapp.models.models import PhoneSMSVerify, CustomUser
-from usrapp.models.serializers import CustomUserSerializer
+from usrapp.models.serializers import CustomUserSerializer, PhoneSMSSerializer
+from usrapp.sms_service.service import DumanSMSService
 
 
 def main_page(request):
@@ -37,26 +41,32 @@ class LoginView(APIView):
         data = request.data
         username = data.get('username', None)
         password = data.get('password', None)
+        code = data['code']
 
-        user = authenticate(username=username, password=password)
-        phone_number = user.telephone
+        try:
+            user = authenticate(username=username, password=password)
+            phone_number = user.telephone
 
-        # get token
-        tkn = RefreshToken.for_user(user)
-        request.session['access_token'] = tkn.access_token
-        request.session['refresh_token'] = tkn
+            # get token
+            phone_sms = PhoneSMSVerify.objects.get(
+                user=user,
+                code=code
+            )
 
-        # sms sending
-        sifre = self.send_sms(phone_number)
-        print(f"şifre : {sifre}")
-        messages.success(request, 'Şifre gönderildi')
+            # redirect sms page
+            return Response(
+                data={
+                    "access": phone_sms.access,
+                    "refresh": phone_sms.refresh
+                },
+                status=status.HTTP_200_OK
+            )
 
-        # save token and sms code
-        phone_sms = PhoneSMSVerify.objects.update_or_create(user=user, code=sifre,
-                                                            access=tkn.access_token, refresh=tkn)[0]
+        except Exception as err:
+            raise APIException(f"SMS Authentication hatalı ! \n Hata : {err}")
 
-        # redirect sms page
-        return render(request, 'usrapp/SMS Page.html')
+    def get(self, request, format=None):
+        raise NotImplementedError
 
     @staticmethod
     def send_sms(phone_number):
@@ -106,3 +116,31 @@ class SMSView(APIView):
 
         else:
             return render(request, '/tabela')
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = serializers.TokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        token = super(CustomTokenObtainPairView, self).post(request, *args, **kwargs)
+        access = token.data.get('access')
+        refresh = token.data.get('refresh')
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+        code = DumanSMSService.generate_send_sms(
+            user.telephone
+        )
+
+        user_phone = PhoneSMSVerify.objects.update_or_create(
+            user=user,
+            access=access,
+            refresh=refresh,
+            code=code
+        )
+
+        return HttpResponse({
+            "Token kaydedildi ve authentication dogru! Tokeni almak ve SMS doğrulaması"
+            " için Login Servisine gidiniz : /usrapp/login"
+        }, status=status.HTTP_200_OK)
