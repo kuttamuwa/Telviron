@@ -2,7 +2,7 @@ import ccxt
 import pandas as pd
 import requests
 
-from notifications.models.models import Exchanges
+from price.models.models import Exchanges
 
 
 def add_exchanges_auto():
