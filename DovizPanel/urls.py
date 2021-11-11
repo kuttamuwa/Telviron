@@ -36,5 +36,4 @@ urlpatterns = [
     path('usrapp/', include(uurls)),
     path('provider/', include(curls)),
     path('notifications/', include(nurls)),
-
 ]

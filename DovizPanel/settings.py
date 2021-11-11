@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+
+    # SESSIONS
+    'user_sessions',
+    # 'django.contrib.sessions',
+
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -69,7 +73,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
+
+    # SESSION
+    'user_sessions.middleware.SessionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
     'django.middleware.common.CommonMiddleware',
 
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -258,3 +266,7 @@ LOG_VIEWER_FILE_LIST_STYLES = "admin/css/base.css"
 
 # template - style
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# SESSIONS
+LOGOUT_REDIRECT_URL = 'usrapp/logout'
+SESSION_ENGINE = 'user_sessions.backends.db'
