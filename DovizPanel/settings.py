@@ -196,12 +196,6 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
-DJOSER = {
-    'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.IsAuthenticated'],
-    }
-}
-
 # Celery Configuration Options
 CELERY_TIMEZONE = "Europe/Istanbul"
 CELERY_TASK_TRACK_STARTED = True
