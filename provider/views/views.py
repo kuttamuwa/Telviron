@@ -46,7 +46,7 @@ class TabelaView(APIView):
 
     ]
     permission_classes = [
-        IsAuthenticated
+        # IsAuthenticated
     ]
 
     renderer_classes = [

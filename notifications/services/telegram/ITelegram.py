@@ -2,14 +2,12 @@
 Telegram Notification Service
 
 """
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, Filters
-
-from notifications.models.models import TelegramNotification, WatchCryptoAsset, CryptoAsset
 import telegram
+from telegram.ext import Updater, CommandHandler
 
+from notifications.models.models import TelegramNotification
 from notifications.services.image.manipulator import ImageManipulator
-from provider.models.models import Doviz, SarrafiyeMilyem
-from usrapp.models.models import CustomUser
+from price.models.models import CryptoAsset, WatchCryptoAsset
 
 
 class TelegramDataService:

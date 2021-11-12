@@ -72,7 +72,11 @@ class HesaplananSarrafiyeAPI(viewsets.ViewSet):
     ]
 
     def list(self, request, *args, **kwargs):
-        kgrtry = Doviz.objects.get(kur__exact='KGRTRY')
+        try:
+            kgrtry = Doviz.objects.get(kur__exact='KGRTRY')
+        except Doviz.DoesNotExist:
+            raise APIException("KGRTRY tanımlanmamış ! Lütfen /doviz API'sinden tanımlayınız")
+
         kgrtry_alis = kgrtry.alis
         kgrtry_satis = kgrtry.satis
 

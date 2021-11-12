@@ -21,12 +21,12 @@ http://www.ozbeyfiziki.com/mobil/data2.txt
 
 
 class Doviz(models.Model):
-    kur = models.CharField(max_length=7, name='kur', verbose_name='Kur')
+    kur = models.CharField(max_length=7, name='kur', verbose_name='Kur', unique=True)
     update_date = models.DateTimeField(verbose_name='Güncellenme Tarihi', name='update_date',
                                        auto_now_add=True)
     alis = models.FloatField(name='alis', verbose_name='Alış')
     satis = models.FloatField(name='satis', verbose_name='Satış')
-    source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı')
+    source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı', null=True)
 
     objects = models.Manager()
 
@@ -36,8 +36,8 @@ class Doviz(models.Model):
                f'Satış : {self.satis} '
 
     class Meta:
-        db_table = 'OZBEY_DOVIZ'
-        ordering = ['-update_date']
+        db_table = 'OZBEY_DOVIZ'  # todo: degistir
+        ordering = ['-update_date', '-kur']
 
 
 class SarrafiyeMilyem(models.Model):

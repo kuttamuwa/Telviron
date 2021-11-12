@@ -8,7 +8,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     # authentication
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # path('sms', SMSView.as_view(), name='sms'),
