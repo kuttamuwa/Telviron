@@ -116,7 +116,7 @@ class DovizHistoryAPI(viewsets.ReadOnlyModelViewSet):
     queryset = DovizH.objects.all()
     serializer_class = DovizHistorySerializer
     permission_classes = [
-        # IsAuthenticated
+        IsAuthenticated
     ]
     renderer_classes = [
         AdminRenderer
@@ -135,7 +135,7 @@ class SarrafiyeHistoryAPI(viewsets.ReadOnlyModelViewSet):
     queryset = SarrafiyeMilyemH.objects.all()
     serializer_class = SarrafiyeMilyemHistorySerializer
     permission_classes = [
-        # IsAuthenticated
+        IsAuthenticated
     ]
     renderer_classes = [
         AdminRenderer
