@@ -136,7 +136,7 @@ class SarrafiyeHistoryAPI(viewsets.ReadOnlyModelViewSet):
     queryset = SarrafiyeMilyemH.objects.all()
     serializer_class = SarrafiyeMilyemHistorySerializer
     permission_classes = [
-        # IsAuthenticated
+        IsAuthenticated
     ]
     renderer_classes = [
         AdminRenderer,

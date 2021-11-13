@@ -45,7 +45,7 @@
 			"response": []
 		},
 		{
-			"name": "Authentication Token testuser",
+			"name": "Authentication SMS admin",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -61,11 +61,16 @@
 							"key": "password",
 							"value": "figo1190",
 							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "5517",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/auth/token/login",
+					"raw": "http://127.0.0.1:8000/usrapp/login",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -75,8 +80,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"auth",
-						"token",
+						"usrapp",
 						"login"
 					]
 				}
@@ -93,7 +97,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"value": "{{token}}",
 						"type": "text"
 					}
 				],
@@ -118,13 +122,60 @@
 			"response": []
 		},
 		{
+			"name": "Get Doviz History",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz_h/?format=json",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz_h",
+						""
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Doviz ekle",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"value": "{{token}}",
 						"type": "text"
 					}
 				],
@@ -169,13 +220,126 @@
 			"response": []
 		},
 		{
+			"name": "Doviz update",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "USDTRY",
+							"type": "text"
+						},
+						{
+							"key": "alis",
+							"value": "12",
+							"type": "text"
+						},
+						{
+							"key": "satis",
+							"value": "9.5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz/65/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz",
+						"65",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Doviz sort",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "USDTRY",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "alis",
+							"value": "9.7",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "satis",
+							"value": "9.5",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "index",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/doviz/64/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"doviz",
+						"64",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Hesaplanan Sarrafiye",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"value": "{{token}}",
 						"type": "text"
 					}
 				],
@@ -202,56 +366,11 @@
 		{
 			"name": "Sarrafiye ekle",
 			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://127.0.0.1:8000/provider/api/doviz/?kur=KGRTRY&alis=566365&satis=566949",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"provider",
-						"api",
-						"doviz",
-						""
-					],
-					"query": [
-						{
-							"key": "kur",
-							"value": "KGRTRY"
-						},
-						{
-							"key": "alis",
-							"value": "566365"
-						},
-						{
-							"key": "satis",
-							"value": "566949"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Milyem ekle",
-			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"value": "{{token}}",
 						"type": "text"
 					}
 				],
@@ -270,7 +389,7 @@
 						},
 						{
 							"key": "satis",
-							"value": "0.9",
+							"value": "1.1",
 							"type": "text"
 						}
 					]
@@ -296,21 +415,38 @@
 			"response": []
 		},
 		{
-			"name": "Get Current User",
+			"name": "Sarrafiye update",
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
+				"method": "PATCH",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2MzI5MTQwLCJqdGkiOiJkMDhjNjE0MGIyMDg0ZTBjYTcxYTNiZTAyNjM4OWE3NCIsInVzZXJfaWQiOjF9.z5Pg2qQpv_HmtoADRA6jMBCuduIi7O0tmVoOqpVpc7w",
+						"value": "{{token}}",
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "Gram",
+							"type": "text"
+						},
+						{
+							"key": "alis",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "satis",
+							"value": "1.2",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/usrapp/current_user/",
+					"raw": "http://127.0.0.1:8000/provider/api/sarrafiye/6/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -320,13 +456,144 @@
 					],
 					"port": "8000",
 					"path": [
-						"usrapp",
-						"current_user",
+						"provider",
+						"api",
+						"sarrafiye",
+						"6",
 						""
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Sarrafiye sort",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "kur",
+							"value": "Gram",
+							"type": "text"
+						},
+						{
+							"key": "alis",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "satis",
+							"value": "1.1",
+							"type": "text"
+						},
+						{
+							"key": "index",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/sarrafiye/6/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"sarrafiye",
+						"6",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get sarrafiye",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/sarrafiye",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"sarrafiye"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get sarrafiye History",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/provider/api/sarrafiye_h?format=json",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"provider",
+						"api",
+						"sarrafiye_h"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM2ODIxOTMxLCJqdGkiOiJlYTZmMTQ1OTFlN2Y0ZjhkYmU3M2NhZjlkYzk0MjI3MSIsInVzZXJfaWQiOjN9.eKbf8TCeMITRY5jNEMoUJd1zS2RSK4sstFjtuE_ldKw"
 		}
 	]
 }

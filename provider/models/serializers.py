@@ -46,15 +46,38 @@ class SarrafiyeMilyemCalculatedSerializer(Serializer):
 # HISTORY
 class DovizHistorySerializer(ModelSerializer):
     instance = serializers.SlugRelatedField(slug_field='kur', read_only=True)
+    yeni_alis = serializers.SerializerMethodField('get_instance_alis')
+    yeni_satis = serializers.SerializerMethodField('get_instance_satis')
 
     class Meta:
         model = DovizH
         fields = '__all__'
 
+    def get_instance_alis(self, obj):
+        return obj.instance.alis
+
+    def get_instance_satis(self, obj):
+        return obj.instance.satis
+
+    def get_instance_kur(self, obj):
+        return obj.instance.kur
+
 
 class SarrafiyeMilyemHistorySerializer(ModelSerializer):
-    instance = serializers.SlugRelatedField(slug_field='kur', read_only=True)
+    instance_kur = serializers.SerializerMethodField('get_instance_kur')
+    yeni_alis = serializers.SerializerMethodField('get_instance_alis')
+    yeni_satis = serializers.SerializerMethodField('get_instance_satis')
 
     class Meta:
         model = SarrafiyeMilyemH
-        fields = '__all__'
+        fields = ('instance_kur', 'yeni_alis', 'yeni_satis',
+                  'old_alis', 'old_satis', 'update_date', 'source')
+
+    def get_instance_alis(self, obj):
+        return obj.instance.alis
+
+    def get_instance_satis(self, obj):
+        return obj.instance.satis
+
+    def get_instance_kur(self, obj):
+        return obj.instance.kur
