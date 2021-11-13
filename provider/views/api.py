@@ -28,9 +28,11 @@ class DovizAPI(ModelViewSet):
         filters.SearchFilter
     ]
     search_fields = ['source', 'kur']
-    ordering_fields = ['source', 'kur']
-    ordering = 'source'
+    ordering = 'index'
     http_method_names = ['get', 'post', 'patch']
+
+    def get_queryset(self):
+        return Doviz.objects.all().order_by('index')
 
     def create(self, request, *args, **kwargs):
         request.data._mutable = True
@@ -54,8 +56,10 @@ class SarrafiyeAPI(ModelViewSet):
         filters.SearchFilter
     ]
     search_fields = ['kur', 'updated_date', 'source']
-    ordering_fields = ['kur', 'updated_date', 'source']
-    ordering = 'kur'
+    ordering = 'index'
+
+    def get_queryset(self):
+        return SarrafiyeMilyem.objects.all().order_by('index')
 
     def create(self, request, *args, **kwargs):
         request.data._mutable = True
@@ -119,11 +123,11 @@ class DovizHistoryAPI(viewsets.ReadOnlyModelViewSet):
     ]
     # pagination_class = StandardPagination
     filter_backends = [
-        filters.SearchFilter
+        filters.SearchFilter, filters.OrderingFilter
     ]
     search_fields = ['instance', 'source']
-    ordering_fields = ['instance', 'old_alis', 'old_satis']
-    ordering = 'instance'
+    ordering_fields = ['updated_date', 'instance']
+    ordering = ['updated_date']
     http_method_names = ['get']
 
 
