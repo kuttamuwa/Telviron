@@ -1,7 +1,7 @@
 
 # Ignore dynaconf secret files
 .secrets.*
-provider/migrations/*
-usrapp/migrations/*
-price/migrations/-
-notifications/migrations/*
+/provider/migrations/
+/usrapp/migrations/
+/price/migrations/
+/notifications/migrations/
