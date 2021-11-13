@@ -5,12 +5,13 @@ from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from provider.models.models import Doviz, SarrafiyeMilyem  # , Makas
+from provider.models.models import Doviz, SarrafiyeMilyem, DovizH, SarrafiyeMilyemH
 from provider.models.serializers import DovizSerializer, SarrafiyeMilyemSerializer, \
-    SarrafiyeMilyemCalculatedSerializer  # , MakasSerializer
+    SarrafiyeMilyemCalculatedSerializer, DovizHistorySerializer, SarrafiyeMilyemHistorySerializer  # , MakasSerializer
 from provider.views.paginations import StandardPagination
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class DovizAPI(ModelViewSet):
     queryset = Doviz.objects.all()
     serializer_class = DovizSerializer
     permission_classes = [
-        IsAuthenticated
+        # IsAuthenticated
     ]
     # pagination_class = StandardPagination
     filter_backends = [
@@ -29,6 +30,7 @@ class DovizAPI(ModelViewSet):
     search_fields = ['source', 'kur']
     ordering_fields = ['source', 'kur']
     ordering = 'source'
+    http_method_names = ['get', 'post', 'patch']
 
     def create(self, request, *args, **kwargs):
         request.data._mutable = True
@@ -51,8 +53,8 @@ class SarrafiyeAPI(ModelViewSet):
     filter_backends = [
         filters.SearchFilter
     ]
-    search_fields = ['kur', 'created_date', 'source']
-    ordering_fields = ['kur', 'created_date', 'source']
+    search_fields = ['kur', 'updated_date', 'source']
+    ordering_fields = ['kur', 'updated_date', 'source']
     ordering = 'kur'
 
     def create(self, request, *args, **kwargs):
@@ -63,7 +65,7 @@ class SarrafiyeAPI(ModelViewSet):
 
         request.data['source'] = usr
 
-        return super(SarrafiyeAPI, self).create(request, *args, **kwargs, created_by=request.user)
+        return super(SarrafiyeAPI, self).create(request, *args, **kwargs)
 
 
 class HesaplananSarrafiyeAPI(viewsets.ViewSet):
@@ -103,3 +105,42 @@ class HesaplananSarrafiyeAPI(viewsets.ViewSet):
             return Response(serializer.data)
         else:
             raise APIException("Veri bulunamamıştır ")
+
+
+# HISTORY
+class DovizHistoryAPI(viewsets.ReadOnlyModelViewSet):
+    queryset = DovizH.objects.all()
+    serializer_class = DovizHistorySerializer
+    permission_classes = [
+        # IsAuthenticated
+    ]
+    renderer_classes = [
+        AdminRenderer
+    ]
+    # pagination_class = StandardPagination
+    filter_backends = [
+        filters.SearchFilter
+    ]
+    search_fields = ['instance', 'source']
+    ordering_fields = ['instance', 'old_alis', 'old_satis']
+    ordering = 'instance'
+    http_method_names = ['get']
+
+
+class SarrafiyeHistoryAPI(viewsets.ReadOnlyModelViewSet):
+    queryset = SarrafiyeMilyemH.objects.all()
+    serializer_class = SarrafiyeMilyemHistorySerializer
+    permission_classes = [
+        # IsAuthenticated
+    ]
+    renderer_classes = [
+        AdminRenderer
+    ]
+
+    # pagination_class = StandardPagination
+    filter_backends = [
+        filters.SearchFilter
+    ]
+    search_fields = ['instance', 'source']
+    ordering_fields = ['instance', 'old_alis', 'old_satis']
+    ordering = 'instance'

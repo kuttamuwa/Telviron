@@ -28,7 +28,7 @@ class DumanSMSService:
         # response = requests.post(cls.url, data={'data': message})
         # print(f"SMS Gonderme servisi response : {response}")
 
-        print("Saved sms code object !")
+        print(f"Saved sms code object ! : {sifre}")
 
         return sifre
 

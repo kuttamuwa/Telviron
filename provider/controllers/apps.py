@@ -8,4 +8,5 @@ class ProviderConfig(AppConfig):
     def ready(self):
         from provider.scheduled_tasks.ozbey import pull_data
         from usrapp.models.models import CustomUser
+        from provider.controllers.signals import doviz_log_changes
         # pull_data()

@@ -35,12 +35,15 @@ INSTALLED_APPS = [
     # site applications
     'usrapp.controllers.apps.UsrappConfig',
     'provider.controllers.apps.ProviderConfig',
+    'notifications.controllers.apps.NotificationsConfig',
+    'price.controllers.apps.PriceConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
 
     # SESSIONS
+    'user_sessions',
     'django.contrib.sessions',
 
     'django.contrib.messages',
@@ -72,6 +75,8 @@ MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
 
+    # SESSIONS
+    'user_sessions.middleware.SessionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     'django.middleware.common.CommonMiddleware',

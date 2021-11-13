@@ -39,6 +39,7 @@ def kur_page(request):
     return render(request, 'provider/get_doviz.html')
 
 
+# todo : TabelaView is deprecated
 class TabelaView(APIView):
     queryset = Doviz.objects.all()
 
