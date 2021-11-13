@@ -5,3 +5,4 @@
 /usrapp/migrations/
 /price/migrations/
 /notifications/migrations/
+/DovizPanel/settings.py
