@@ -42,7 +42,7 @@ class Doviz(models.Model):
 
 
 class SarrafiyeMilyem(models.Model):
-    kur = models.CharField(name='kur', verbose_name='Kur', max_length=10)
+    kur = models.CharField(name='kur', verbose_name='Kur', max_length=10, unique=True)
 
     alis = models.FloatField(name='alis', verbose_name='Alış')
     satis = models.FloatField(name='satis', verbose_name='Satış')
@@ -81,8 +81,8 @@ class DovizH(models.Model):
 
 class SarrafiyeMilyemH(models.Model):
     instance = models.ForeignKey(SarrafiyeMilyem, on_delete=models.CASCADE)
-    old_alis = models.FloatField(name='alis', verbose_name='Eski Alış')
-    old_satis = models.FloatField(name='satis', verbose_name='Eski Satış')
+    old_alis = models.FloatField(name='old_alis', verbose_name='Eski Alış')
+    old_satis = models.FloatField(name='old_satis', verbose_name='Eski Satış')
 
     update_date = models.DateTimeField(auto_now_add=True, verbose_name='Güncellenme Tarihi')
     source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı', null=True)

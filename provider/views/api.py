@@ -5,7 +5,7 @@ from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import AdminRenderer
+from rest_framework.renderers import AdminRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -119,7 +119,8 @@ class DovizHistoryAPI(viewsets.ReadOnlyModelViewSet):
         IsAuthenticated
     ]
     renderer_classes = [
-        AdminRenderer
+        AdminRenderer,
+        JSONRenderer
     ]
     # pagination_class = StandardPagination
     filter_backends = [
@@ -135,10 +136,11 @@ class SarrafiyeHistoryAPI(viewsets.ReadOnlyModelViewSet):
     queryset = SarrafiyeMilyemH.objects.all()
     serializer_class = SarrafiyeMilyemHistorySerializer
     permission_classes = [
-        IsAuthenticated
+        # IsAuthenticated
     ]
     renderer_classes = [
-        AdminRenderer
+        AdminRenderer,
+        JSONRenderer
     ]
 
     # pagination_class = StandardPagination
