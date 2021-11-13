@@ -27,6 +27,7 @@ class Doviz(models.Model):
     alis = models.FloatField(name='alis', verbose_name='Alış')
     satis = models.FloatField(name='satis', verbose_name='Satış')
     source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı', null=True)
+    index = models.IntegerField(verbose_name='Index', default=0, db_index=True)
 
     objects = models.Manager()
 
@@ -37,7 +38,7 @@ class Doviz(models.Model):
 
     class Meta:
         db_table = 'DOVIZ'  # todo: degistir
-        ordering = ['-update_date', '-kur']
+        ordering = ['-index']
 
 
 class SarrafiyeMilyem(models.Model):
@@ -47,6 +48,7 @@ class SarrafiyeMilyem(models.Model):
     satis = models.FloatField(name='satis', verbose_name='Satış')
     updated_date = models.DateTimeField(auto_now_add=True, verbose_name='Güncellenme tarihi')
     source = models.CharField(max_length=50, name='source', verbose_name='Veri Kaynağı', null=True)
+    index = models.IntegerField(verbose_name='Index', default=0, db_index=True)
 
     def __str__(self):
         return f'{self.kur} Sarrafiye \n' \
@@ -59,6 +61,7 @@ class SarrafiyeMilyem(models.Model):
 
     class Meta:
         db_table = 'SARRAFIYE_MILYEM'
+        ordering = ['-index']
 
 
 # History Tables
