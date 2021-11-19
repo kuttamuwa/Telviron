@@ -34,7 +34,6 @@ INSTALLED_APPS = [
 
     # site applications
     'usrapp.controllers.apps.UsrappConfig',
-    'provider.controllers.apps.ProviderConfig',
     'notifications.controllers.apps.NotificationsConfig',
     'price.controllers.apps.PriceConfig',
 
