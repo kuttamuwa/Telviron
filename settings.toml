@@ -1,8 +1,0 @@
-[SMS_SERVICE]
-url = ""
-telephone = ""
-DEFAULT_MESSAGE = "Doviz Panel uygulamasına hoş geldiniz! Devam etmek için lütfen {security_code} güvenlik kodunu giriniz"
-
-[TELEGRAM_SERVICE]
-name = ""
-token = ""
