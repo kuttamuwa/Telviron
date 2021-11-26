@@ -6,7 +6,8 @@ import json
 
 import telegram
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
-from telegram.ext import Updater, CommandHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 from notifications.models.models import TelegramActive
 from notifications.services.image.manipulator import ImageManipulator
@@ -31,8 +32,12 @@ class TelegramDataService(metaclass=Singleton):
         self.updater.start_polling()
 
     def init_settings(self):
-        # keyboard test
+        # button
+        self.dispatcher.add_handler(CallbackQueryHandler(self.button))
 
+        # help
+        help_handler = CommandHandler('help', self.help_command)
+        self.dispatcher.add_handler(help_handler)
 
         # start
         start_handler = CommandHandler('start', self.start)
@@ -50,11 +55,19 @@ class TelegramDataService(metaclass=Singleton):
         # unknown_handler = CommandHandler('', self.unknown)
         # self.dispatcher.add_handler(MessageHandler([Filters.command], self.unknown))
 
-    stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
-    crossIcon = u"\u274C"
-
     def send_msg(self, chat_id, msg):
         self.bot.send_message(chat_id, msg)
+
+    @staticmethod
+    def button(update, context) -> None:
+        """Parses the CallbackQuery and updates the message text."""
+        query = update.callback_query
+
+        # CallbackQueries need to be answered, even if no notification to the user is needed
+        # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+        query.answer()
+
+        query.edit_message_text(text=f"Selected option: {query.data}")
 
     @staticmethod
     def watch_list(update, context):
@@ -93,11 +106,28 @@ class TelegramDataService(metaclass=Singleton):
             update.message.reply_text('Are you sure you add your symbol ? ex. BTC/USDT, ETH/USDT etc.')
 
     @staticmethod
+    def help_command(update, context):
+        update.message.reply_text('Use /start to test this bot.')
+
+    @staticmethod
     def start(update, context):
+        # save active channel information to use again
         user = update.effective_chat.username
         TelegramActive.objects.update_or_create(username=user, chat_id=update.effective_chat.id)
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Hi! My name is NPC Dumb Bot. '
-                                                                        '@Kuttamuwa created me !')
+
+        keyboard = [
+            [
+                InlineKeyboardButton("Option 1", callback_data='1'),
+                InlineKeyboardButton("Option 2", callback_data='2'),
+            ],
+            [InlineKeyboardButton("Option 3", callback_data='3')],
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        update.message.reply_text(
+            "Hi! Welcome to Asset Guardian. If you /start me, we'll start to serve you immediately !  \n ",
+            reply_markup=reply_markup)
 
     @staticmethod
     def unknown(update, context):

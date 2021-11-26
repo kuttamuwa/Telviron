@@ -98,15 +98,15 @@ def ovhl_htf(symbol):
 
 def notify_data_periods(data_periods):
     symbol = data_periods['symbol']
-    which_users_following = PeriodicTask.objects.filter(name__contains=symbol).values(
-        'name')  # todo: split: complex filter
+    # todo: split: complex filter
+    which_users_following = PeriodicTask.objects.filter(name__contains=symbol).values('name')
     which_users_following = [i['name'].split('_')[0] for i in which_users_following]
     print(f"Following users: {which_users_following}")
 
     which_users_following = TelegramActive.objects.filter(username__in=which_users_following)
     for usr in which_users_following:
         global_telegram_service.send_message()
-        print("Notifying {usr}")
+        print(f"Notifying {usr}")
 
 
 def ema_ribbons(symbol, timeframe, source='Close', periods=(20, 50, 100, 200, 400)):
