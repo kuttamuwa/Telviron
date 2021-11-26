@@ -18,9 +18,9 @@ from django.urls import path, include
 from rest_framework.authtoken import views
 
 from DovizPanel.views import main_page
-from provider.controllers import urls as curls
 from usrapp.controllers import urls as uurls
 from notifications.controllers import urls as nurls
+from price.controllers import urls as purls
 
 import debug_toolbar
 
@@ -34,6 +34,6 @@ urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
 
     path('usrapp/', include(uurls)),
-    path('provider/', include(curls)),
     path('notifications/', include(nurls)),
+    path('price/', include(purls)),
 ]

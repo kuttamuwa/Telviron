@@ -40,6 +40,7 @@ def ovhl_hourly_since_yesterday(symbol, **kwargs):
     return asset_data
 
 
+@shared_task
 def ovhl_htf(symbol):
     """
 
