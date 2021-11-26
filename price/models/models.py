@@ -4,8 +4,8 @@ from django.db import models
 from price.models.managers import DiaryManager
 
 DATE_ACTION_ENUMS = [
-    ('1D', 'DAILY'),
-    ('1W', 'WEEKLY'),
+    ('1d', 'DAILY'),
+    ('1w', 'WEEKLY'),
     ('1M', 'MONTHLY'),
     ('3M', 'QUARTERLY'),
     ('6M', 'MID'),
