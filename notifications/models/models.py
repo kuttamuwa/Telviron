@@ -21,3 +21,13 @@ class TelegramNotification(BaseNotification):
     notifier = 'TELEGRAM'
     token = models.CharField(max_length=50, null=False, blank=False, unique=True)
 
+    class Meta:
+        abstract = False
+
+
+class TelegramActive(models.Model):
+    username = models.CharField(max_length=50, verbose_name='User name')
+    chat_id = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'TelegramActive'

@@ -4,8 +4,11 @@ import ccxt
 import pandas as pd
 import talib
 from celery import shared_task
-
 # only exchange for now
+from django_celery_beat.models import PeriodicTask
+
+from notifications.controllers.apps import global_telegram_service
+from notifications.models.models import TelegramActive
 
 exchange = ccxt.binance()
 
@@ -55,8 +58,9 @@ def ovhl_htf(symbol):
     :return:
     """
     data_periods = {
-
+        'symbol': symbol
     }
+
     data = exchange.fetch_ohlcv(symbol, limit=365, timeframe="1d")  # daily whole year
     data = asset_df(data)
 
@@ -87,7 +91,22 @@ def ovhl_htf(symbol):
 
     print(f"OVHL of {symbol}: {data_periods}")
 
+    notify_data_periods(data_periods)
+
     return data_periods
+
+
+def notify_data_periods(data_periods):
+    symbol = data_periods['symbol']
+    which_users_following = PeriodicTask.objects.filter(name__contains=symbol).values(
+        'name')  # todo: split: complex filter
+    which_users_following = [i['name'].split('_')[0] for i in which_users_following]
+    print(f"Following users: {which_users_following}")
+
+    which_users_following = TelegramActive.objects.filter(username__in=which_users_following)
+    for usr in which_users_following:
+        global_telegram_service.send_message()
+        print("Notifying {usr}")
 
 
 def ema_ribbons(symbol, timeframe, source='Close', periods=(20, 50, 100, 200, 400)):
