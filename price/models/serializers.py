@@ -1,23 +1,15 @@
 from rest_framework.serializers import ModelSerializer
 
-from price.models.models import Exchanges, CryptoAsset, WatchCryptoAsset
+from price.models.models import DiaryAction, DiaryNew
 
 
-class ExchangeSerializer(ModelSerializer):
+class DiaryActionSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
-        model = Exchanges
+        model = DiaryAction
 
 
-class CryptoAssetSerializer(ModelSerializer):
-    # exchanges = serializers.CharField(source='exchanges.name')
-
+class DiaryNewSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
-        model = CryptoAsset
-
-
-class WatchAssetSerializer(ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = WatchCryptoAsset
+        model = DiaryNew
