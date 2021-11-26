@@ -1,34 +1,36 @@
-from datetime import datetime
+from datetime import date, timedelta, datetime
 
+from celery import shared_task
+
+from price.models.models import DATE_ACTION_ENUMS, EMA_ENUMS
+from config import settings
 import ccxt
 import pandas as pd
-from matplotlib import pyplot as plt
 
-from config import settings
+# only exchange for now
+exchange = ccxt.binance()
 
-# plot settings
-plt.rcParams['figure.figsize'] = [12, 7]
-plt.rc('font', size=14)
 
-# from variable id
-exchange_id = 'binance'
-keys = getattr(settings, exchange_id)
-exchange_class = getattr(ccxt, exchange_id)
-exchange = exchange_class({
-    'apiKey': keys.API_KEY,
-    'secret': keys.SECRET_KEY,
-})
+def ovhl_hourly_since_yesterday(symbol):
+    """
+    Default latest 24 hour whole data per hour timeframe
+    :param symbol: BTC/USDT
+    :return:
+    """
+    yesterday = datetime.now() - timedelta(days=1)
+    yesterday = yesterday.strftime('%Y-%m-%dT%H:%M:%S')
+    yesterday = exchange.parse8601(yesterday)
 
-# virtual
-# exchange.set_sandbox_mode(True)
-symbol = 'BTC/USDT'
-header = ['Timestamp', 'Open', 'High', 'Low', 'Close', 'Volume']
-t_frame = '5m'
+    header = ['Timestamp', 'Open', 'High', 'Low', 'Close', 'Volume']
+    t_frame = "1h"
+    asset_data = exchange.fetch_ohlcv(symbol, timeframe=t_frame, since=yesterday)
+    asset_data = pd.DataFrame(asset_data, columns=header)
+    asset_data['Timestamp'] = [datetime.utcfromtimestamp(i // 1000) for i in asset_data.Timestamp]
 
-# fetch data
-btc_saatlik_50 = exchange.fetch_ohlcv(symbol, t_frame)
-btc_saatlik_50 = pd.DataFrame(btc_saatlik_50, columns=header)
-btc_saatlik_50['Timestamp'] = [datetime.utcfromtimestamp(i // 1000) for i in btc_saatlik_50.Timestamp]
-# btc_saatlik_50.Timestamp = btc_saatlik_50.Timestamp.to_timestamp()
-btc_saatlik_50.rename(columns={'Timestamp': 'Date'}, inplace=True)
+    return asset_data
 
+
+def get_sma(symbol, length=20, time_frame='1D'):
+    assert time_frame in [i[0] for i in EMA_ENUMS]
+
+    asset_data = exchange.fetch
