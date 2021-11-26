@@ -156,3 +156,6 @@ class TelegramDataService(metaclass=Singleton):
     @classmethod
     def save_as_default(cls, bot: telegram.Bot):
         cls.bot = bot
+
+
+telegram_service = TelegramDataService()

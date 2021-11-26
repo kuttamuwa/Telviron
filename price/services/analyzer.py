@@ -7,8 +7,8 @@ from celery import shared_task
 # only exchange for now
 from django_celery_beat.models import PeriodicTask
 
-from notifications.controllers.apps import global_telegram_service
 from notifications.models.models import TelegramActive
+from notifications.services.telegram.ITelegram import TelegramDataService
 
 exchange = ccxt.binance()
 
@@ -105,8 +105,10 @@ def notify_data_periods(data_periods):
 
     which_users_following = TelegramActive.objects.filter(username__in=which_users_following)
     for usr in which_users_following:
-        global_telegram_service.send_message()
         print(f"Notifying {usr}")
+        chat_id = usr.chat_id
+        TelegramDataService.get_system_bot(True)
+        TelegramDataService.bot.send_message(chat_id, data_periods)
 
 
 def ema_ribbons(symbol, timeframe, source='Close', periods=(20, 50, 100, 200, 400)):
