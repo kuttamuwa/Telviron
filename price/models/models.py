@@ -61,7 +61,7 @@ class DiaryNew(models.Model):
 
 class DiaryChart(models.Model):
     symbol = models.CharField(max_length=20, verbose_name='Asset Symbol')
-    chart = models.ImageField(verbose_name='Chart', upload_to='/charts/')
+    chart = models.ImageField(verbose_name='Chart', upload_to='charts/')
 
     class Meta:
         db_table = 'Chart'
