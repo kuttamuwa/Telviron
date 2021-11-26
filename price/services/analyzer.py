@@ -2,12 +2,10 @@ from datetime import timedelta, datetime
 
 import ccxt
 import pandas as pd
-
 import talib
 from celery import shared_task
 
 # only exchange for now
-from price.models.models import DATE_ACTION_ENUMS
 
 exchange = ccxt.binance()
 
@@ -26,17 +24,17 @@ def ovhl_hourly_since_yesterday(symbol, **kwargs):
     Default latest 24 hour whole data per hour timeframe
     :param symbol: BTC/USDT
     :param kwargs:
-    timeframe
+    timeframe: 1h, 1w, 1d, 1m etc.
+    since: Format %Y-%m-%dT%H:%M:%S
+    limit: default 1000
 
     :return:
     """
-    yesterday = datetime.now() - timedelta(days=1)
-    yesterday = yesterday.strftime('%Y-%m-%dT%H:%M:%S')
+    yesterday = kwargs.get('since', (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'))
     yesterday = exchange.parse8601(yesterday)
 
-    timeframe = kwargs.get('timeframe', '1h')
-
-    asset_data = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=yesterday)
+    asset_data = exchange.fetch_ohlcv(symbol, timeframe=kwargs.get('timeframe', '1h'),
+                                      since=yesterday, limit=kwargs.get('limit'))
     asset_data = asset_df(asset_data)
 
     return asset_data
@@ -64,7 +62,7 @@ def ovhl_htf(symbol):
 
     # yearly
     yo = data[(data['Timestamp'].dt.year == datetime.now().year) & (data['Timestamp'].dt.day == 1) & (
-                data['Timestamp'].dt.month == 1)]
+            data['Timestamp'].dt.month == 1)]
     data_periods['Yearly'] = yo
 
     # previous week
