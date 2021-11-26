@@ -18,6 +18,13 @@ def asset_df(asset_data) -> pd.DataFrame:
     return asset_data
 
 
+series_to_json = lambda x: f"Open : {float(x['Open'])} \n " \
+                           f"High : {float(x['High'])} \n" \
+                           f"Low : {float(x['Low'])} \n " \
+                           f"Close : {float(x['Close'])} \n " \
+                           f"Volume : {float(x['Volume'])}"
+
+
 @shared_task
 def ovhl_hourly_since_yesterday(symbol, **kwargs):
     """
@@ -55,28 +62,30 @@ def ovhl_htf(symbol):
 
     # current monthly
     cmo = data[(data['Timestamp'].dt.month == datetime.now().month) & (data['Timestamp'].dt.day == 1)]
-    data_periods['Monthly'] = cmo
+    data_periods['Monthly'] = series_to_json(cmo.drop(columns=['Timestamp']))
 
     # previous month
     pmo = data[(data['Timestamp'].dt.month == datetime.now().month - 1) & (data['Timestamp'].dt.day == 1)]
-    data_periods['Previous Month'] = pmo
+    data_periods['Previous Month'] = series_to_json(pmo.drop(columns=['Timestamp']))
 
     # yearly
     yo = data[(data['Timestamp'].dt.year == datetime.now().year) & (data['Timestamp'].dt.day == 1) & (
             data['Timestamp'].dt.month == 1)]
-    data_periods['Yearly'] = yo
+    data_periods['Yearly'] = series_to_json(yo.drop(columns=['Timestamp']))
 
     # previous week
     pwo = data[(data['Timestamp'].dt.day_of_week == 0) & (data['Timestamp'].dt.day == 1)].iloc[-1]
-    data_periods['Previous Week'] = pwo
+    data_periods['Previous Week'] = series_to_json(pwo.drop(columns=['Timestamp']))
 
     # daily
     do = data.iloc[-1]
-    data_periods['Daily'] = do
+    data_periods['Daily'] = series_to_json(do.drop(columns=['Timestamp']))
 
     # previous day open
     pdo = data.iloc[-2]
-    data_periods['Previous Day'] = pdo
+    data_periods['Previous Day'] = series_to_json(pdo.drop(columns=['Timestamp']))
+
+    print(f"OVHL of {symbol}: {data_periods}")
 
     return data_periods
 

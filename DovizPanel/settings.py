@@ -208,7 +208,7 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_IMPORTS = ("price.services.analyzer.ovhl_htf",
+CELERY_IMPORTS = ("price.services.analyzer",
                   )
 
 # CORS
@@ -266,3 +266,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # SESSIONS
 LOGOUT_REDIRECT_URL = 'usrapp/logout'
 SESSION_ENGINE = 'user_sessions.backends.db'
+
