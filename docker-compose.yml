@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  django:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./web:/app
+    networks:
+      - postgres
+#    restart: unless-stopped
+    tty: true
+
+
+  nginx:
+    container_name: dev_web
+    restart: on-failure
+    image: nginx
+    volumes:
+      - ./templates:/etc/nginx/templates
+    ports:
+      - "8080:80"
+    depends_on:
+      - djapp
+    environment:
+      - NGINX_HOST = localhost
+      - NGINX_PORT = 80
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: figo1190
+      POSTGRES_DB: appdb
+    volumes:
+        - postgres:/data/postgres
+    networks:
+      - postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  postgres:
+  pgadmin:
+
+#  web:
+#    build: .
+#    command:
+#      - python manage.py makemigrations
+#      - python manage.py migrate
+#      - python manage.py runserver 0.0.0.0
+#    volumes:
+#      - .:/code
+#    ports:
+#      - "8000:8000"
+#    environment:
+#      - POSTGRES_NAME=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=figo1190
+#    depends_on:
+#      - db
+
+#  rabbitmq:
+#    image: "rabbitmq:alpine"
+#
+#  celery-worker:
+#    build: .
+#
+#  celery-beat:
+#    build: .
+#
+#  flower:
+#    build: .
+
+
+
+
+
