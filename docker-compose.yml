@@ -2,24 +2,21 @@ version: '3.8'
 
 services:
   django:
+    container_name: webdjango
     build: .
     depends_on:
       - db
     ports:
       - "8000:8000"
     volumes:
-      - ./web:/app
+      - .:/code
     networks:
       - postgres
     entrypoint: /entrypoint.sh
-#    command:
-#      - python manage.py makemigrations --noinput
-#      - python manage.py runserver 0.0.0.0
-#    restart: unless-stopped
-    tty: true
+
 
   nginx:
-    container_name: dev_web
+    container_name: nginx
     restart: on-failure
     image: nginx:latest
     volumes:
@@ -35,6 +32,7 @@ services:
 
   db:
     image: postgres
+    container_name: database
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: figo1190
