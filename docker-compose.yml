@@ -2,33 +2,34 @@ version: '3.8'
 
 services:
   django:
+    working_dir: /code
     container_name: webdjango
     build: .
     depends_on:
       - db
     ports:
-      - "8000:8000"
-    volumes:
-      - .:/code
+      - "8005:8000"
+#    volumes:
+#      - .:/code
     networks:
       - postgres
-    entrypoint: /entrypoint.sh
+#    command:
+#      - python manage.py runserver 0.0.0.0:8000
 
-
-  nginx:
-    container_name: nginx
-    restart: on-failure
-    image: nginx:latest
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./templates:/etc/nginx/templates
-    ports:
-      - "8080:80"
-    depends_on:
-      - djapp
-    environment:
-      - NGINX_HOST = localhost
-      - NGINX_PORT = 80
+#  nginx:
+#    container_name: nginx
+#    restart: on-failure
+#    image: nginx:latest
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#      - ./templates:/etc/nginx/templates
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - db
+#    environment:
+#      - NGINX_HOST = localhost
+#      - NGINX_PORT = 80
 
   db:
     image: postgres
@@ -59,6 +60,8 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+    links:
+      - "db:pgsql-server"
 
 networks:
   postgres:
