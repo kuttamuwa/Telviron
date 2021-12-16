@@ -5,13 +5,14 @@ Telegram Notification Service
 import json
 
 import telegram
-from django_celery_beat.models import IntervalSchedule, PeriodicTask
+from django_celery_beat.models import IntervalSchedule, PeriodicTask, SECONDS
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
-from notifications.models.models import TelegramActive
+from notifications.models.models import TelegramActive, MessageStore
 from notifications.services.image.manipulator import ImageManipulator
 from notifications.services.telegram.singleton import Singleton
+from usrapp.models.models import CustomUser
 
 
 class TelegramDataService(metaclass=Singleton):
@@ -51,6 +52,18 @@ class TelegramDataService(metaclass=Singleton):
         watch_list_handler = CommandHandler('watchlist', self.watch_list)
         self.dispatcher.add_handler(watch_list_handler)
 
+        # set time interval
+        # time_interval_handler = CommandHandler('interval', self.set_interval)
+        # self.dispatcher.add_handler(time_interval_handler)
+
+        # rss kayit
+        rss_store_handler = CommandHandler('rss', self.rss_store_handler)
+        self.dispatcher.add_handler(rss_store_handler)
+
+        # set message
+        message_handler = CommandHandler('message', self.set_message)
+        self.dispatcher.add_handler(message_handler)
+
         # unknown
         # unknown_handler = CommandHandler('', self.unknown)
         # self.dispatcher.add_handler(MessageHandler([Filters.command], self.unknown))
@@ -76,6 +89,62 @@ class TelegramDataService(metaclass=Singleton):
 
         msg = list(tasks)
         msg = "There is no active task for you :(" if not msg else msg
+        update.message.reply_text(msg)
+
+    # @staticmethod
+    # def set_interval(update, context):
+    #     user = update.effective_chat.username
+    #     tasks = IntervalSchedule.objects.update_or_create()
+    #     interval = context.args[0]
+    #     # add or update Periodic tasks interval
+    #
+    #     msg = "I set time interval ! Now specify which message you want to send: "
+    #
+    #     update.message.reply_text(msg)
+
+    @classmethod
+    def send_message_all(cls, msg, username=None):
+        for usr in CustomUser.objects.all():
+            bot = cls.get_user_bot(username=usr.username, add_default=False)
+            bot.send_message(msg)
+
+    @staticmethod
+    def set_message(update, context):
+        user = update.effective_chat.username
+        message = " ".join(context.args[:-1])
+        every = context.args[-1]
+
+        period, created = IntervalSchedule.objects.get_or_create(
+            every=every,
+            period=IntervalSchedule.SECONDS
+        )
+
+        MessageStore.objects.update_or_create(
+            message=message, interval=period
+        )
+        PeriodicTask.objects.update_or_create(
+            interval=period,
+            name=f'{user}_sendmessager_every_{every}',
+            task='notifications.services.telegram.ITelegram.TelegramDataService.send_message_all',
+            kwargs=json.dumps({
+                'msg': message
+            })
+        )
+        # create periodic task to send message
+        msg = "I created the task ! We will send: \n" \
+              f"{message} - Interval : {every}"
+
+        update.message.reply_text(msg)
+
+    @staticmethod
+    def rss_store_handler(update, context):
+        user = update.effective_chat.username
+        # todo: if user is not admin
+        rss_name, rss_link = context.args
+
+        # create rss
+
+        msg = f"We are watching the RS Service : {rss_link}"
         update.message.reply_text(msg)
 
     @staticmethod

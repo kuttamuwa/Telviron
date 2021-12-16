@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+from django_celery_beat.models import IntervalSchedule, PERIOD_CHOICES
+
 from notifications.models.managers import BaseNotificationManager
 from usrapp.models.models import CustomUser
 
@@ -31,3 +33,23 @@ class TelegramActive(models.Model):
 
     class Meta:
         db_table = 'TelegramActive'
+
+
+class RSSStore(models.Model):
+    rss_name = models.CharField(max_length=100, verbose_name='RSS Name')
+    rss_link = models.URLField(verbose_name='RSS Link')
+
+    def __str__(self):
+        return f"{self.rss_name} ||  {self.rss_link}"
+
+
+class MessageStore(models.Model):
+    message = models.CharField(max_length=200, verbose_name='Mesaj')
+    interval = models.CharField(choices=PERIOD_CHOICES, max_length=24)
+
+    to = models.ForeignKey(CustomUser, on_delete=models.PROTECT, null=True)
+
+    def __str__(self):
+        return f"Message : {self.message} \n" \
+               f"Interval : {self.interval} \n" \
+               f"To : {self.to}"

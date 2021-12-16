@@ -1,11 +1,8 @@
-from datetime import date, timedelta, datetime
+from datetime import timedelta, datetime
 
-from celery import shared_task
-
-from price.models.models import DATE_ACTION_ENUMS, EMA_ENUMS
-from config import settings
 import ccxt
-import pandas as pd
+
+from price.models.models import EMA_ENUMS
 
 # only exchange for now
 exchange = ccxt.binance()
