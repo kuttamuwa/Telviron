@@ -114,22 +114,14 @@ WSGI_APPLICATION = 'DovizPanel.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'telvirondb',
+        'USER': 'postgres',
+        'PASSWORD': 'figo1190',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
-# TODO: PRODUCTION
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'webdbdjango',
-#         'USER': 'postgres',
-#         'PASSWORD': '!@#QWEasd&!@N@n0Xen0n@2o2o@!',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation

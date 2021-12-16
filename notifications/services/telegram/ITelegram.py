@@ -91,17 +91,6 @@ class TelegramDataService(metaclass=Singleton):
         msg = "There is no active task for you :(" if not msg else msg
         update.message.reply_text(msg)
 
-    # @staticmethod
-    # def set_interval(update, context):
-    #     user = update.effective_chat.username
-    #     tasks = IntervalSchedule.objects.update_or_create()
-    #     interval = context.args[0]
-    #     # add or update Periodic tasks interval
-    #
-    #     msg = "I set time interval ! Now specify which message you want to send: "
-    #
-    #     update.message.reply_text(msg)
-
     @classmethod
     def send_message_all(cls, msg, username=None):
         for usr in CustomUser.objects.all():
@@ -225,6 +214,3 @@ class TelegramDataService(metaclass=Singleton):
     @classmethod
     def save_as_default(cls, bot: telegram.Bot):
         cls.bot = bot
-
-
-telegram_service = TelegramDataService()

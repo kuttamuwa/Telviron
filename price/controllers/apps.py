@@ -6,4 +6,5 @@ class PriceConfig(AppConfig):
     name = 'price'
 
     def ready(self):
-        from price.models.models import DiaryNew, DiaryAction, DiaryChart
+        print("Price is up !")
+        # from price.models.models import DiaryNew, DiaryAction, DiaryChart

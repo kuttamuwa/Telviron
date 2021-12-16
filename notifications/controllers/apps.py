@@ -7,12 +7,8 @@ class NotificationsConfig(AppConfig):
 
     def ready(self):
         print("Notification is up !")
-        from notifications.scripts.telegram_initial import add_telegram_system_bot
+        # from notifications.scripts.telegram_initial import add_telegram_system_bot
         # telegram setup
-        add_telegram_system_bot()
-
-        from notifications.services.telegram.ITelegram import TelegramDataService
-
-        TelegramDataService.get_system_bot(True)
+        # add_telegram_system_bot()
 
 

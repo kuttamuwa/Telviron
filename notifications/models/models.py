@@ -45,11 +45,8 @@ class RSSStore(models.Model):
 
 class MessageStore(models.Model):
     message = models.CharField(max_length=200, verbose_name='Mesaj')
-    interval = models.CharField(choices=PERIOD_CHOICES, max_length=24)
-
-    to = models.ForeignKey(CustomUser, on_delete=models.PROTECT, null=True)
+    tarih = models.DateTimeField(null=False, verbose_name='Tarih')
 
     def __str__(self):
         return f"Message : {self.message} \n" \
-               f"Interval : {self.interval} \n" \
-               f"To : {self.to}"
+               f"Tarih : {self.tarih} \n" \
