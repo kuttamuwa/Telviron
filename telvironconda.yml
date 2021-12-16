@@ -1,0 +1,38 @@
+name: telvirontestenv
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - celery
+  - django
+  - django-celery-beat
+  - django-celery-results
+  - django-cors-headers
+  - django-debug-toolbar
+  - django-filter
+  - djangorestframework
+  - dynaconf
+  - flower
+  - numpy
+  - pandas
+  - proj
+  - python
+  - sqlalchemy
+  - sqlite
+  - ta-lib
+  - matplotlib
+  - mplfinance
+  - pandas-ta
+  - psycopg2-binary
+  - python-telegram-bot
+  - yfinance
+  - django-crispy-forms
+  - pip:
+      - django-log-viewer
+      - django-phone-verify
+      - mpl-finance
+      - django-polymorphic
+      - django-user-sessions
+      - djangorestframework-simplejwt

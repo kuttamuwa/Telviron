@@ -1,15 +1,17 @@
 # alpine?
-FROM python:3.8
+FROM continuumio/miniconda3
 ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /code
 WORKDIR /code
 
 # Python environment
-ADD requirements.txt /code/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-RUN echo 'requirementst'
+#ADD requirements.txt /code/
+ADD telvironconda.yml /code/
+RUN conda env create -f telvironconda.yml --name dovizenv
+RUN echo 'environment created!'
+SHELL ["conda", "run", "-n", "dovizenv", "/bin/bash", "-c"]
+RUN echo 'conda'
 
 ADD . /code/
 RUN echo 'Added project files'
