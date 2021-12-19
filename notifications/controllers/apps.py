@@ -8,8 +8,8 @@ class NotificationsConfig(AppConfig):
     def ready(self):
         print("Notification is up !")
         from notifications.scripts.telegram_initial import add_telegram_system_bot
-        from notifications.services.telegram.DumanMessager import IDumanTelegramService
+        from notifications.scheduled.telegram import tele_service
+
         # telegram setup
         add_telegram_system_bot()
-
-        tele_service = IDumanTelegramService()
+        tele_service = tele_service

@@ -2,20 +2,20 @@
 Telegram Notification Service
 
 """
-import json
+from datetime import datetime
 
-import telegram
-from django_celery_beat.models import IntervalSchedule, PeriodicTask, SECONDS
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 from notifications.models.models import TelegramActive, MessageStore
-from notifications.services.image.manipulator import ImageManipulator
+from notifications.scheduled.bgscheduler import scheduler
 from notifications.services.telegram.singleton import Singleton
-from usrapp.models.models import CustomUser
 
 
 class IDumanTelegramService(metaclass=Singleton):
+    bot_admin_username = 'etoletta'  # admin / creator / tester / developer etc. username
+    date_example = "22052022-16:00"
+    date_format = "%d%m%Y-%H:%M"
     bot = None
 
     def __init__(self, bot=None):
@@ -45,14 +45,9 @@ class IDumanTelegramService(metaclass=Singleton):
         self.dispatcher.add_handler(start_handler)
 
         # set message
-        message_handler = CommandHandler('message', self.set_message)
+        message_handler = CommandHandler('set', self.set_message)
         self.dispatcher.add_handler(message_handler)
 
-        # unknown
-        # unknown_handler = CommandHandler('', self.unknown)
-        # self.dispatcher.add_handler(MessageHandler([Filters.command], self.unknown))
-
-    # @staticmethod
     def start(self, update, context):
         # save active channel information to use again
         user = update.effective_chat.username
@@ -61,11 +56,15 @@ class IDumanTelegramService(metaclass=Singleton):
         keyboard = [
             [
                 InlineKeyboardButton("Get Previous All Time Messages", callback_data='get_message'),
-                InlineKeyboardButton("Subscribe", callback_data='subscribe'),
             ],
-            [InlineKeyboardButton("Set Message", callback_data='set_message')],
+            [
+                InlineKeyboardButton("Set Message", callback_data='set_message')
+            ],
+            [
+                InlineKeyboardButton("EVERYONE", callback_data='everyone'),
+            ],
         ]
-        # if user != 'etoletta':
+        # if user != self.bot_admin_username:
         #     keyboard.pop()
 
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -78,10 +77,6 @@ class IDumanTelegramService(metaclass=Singleton):
     def help_command(update, context):
         update.message.reply_text('Use /start to test this bot.')
 
-    @staticmethod
-    def unknown(update, context):
-        context.bot.send_message(chat_id=update.effective_chat.id, text='')
-
     def set_updater(self):
         updater = Updater(token=self.bot.token, use_context=True)
 
@@ -92,7 +87,7 @@ class IDumanTelegramService(metaclass=Singleton):
         from notifications.models.models import TelegramNotification
 
         tele_user = TelegramNotification.objects.get(user__username=username)
-        bot = telegram.Bot(token=tele_user.token)
+        bot = Bot(token=tele_user.token)
 
         if add_default:
             cls.save_as_default(bot)
@@ -103,11 +98,8 @@ class IDumanTelegramService(metaclass=Singleton):
         return cls.get_user_bot('admin', add_default)
 
     @classmethod
-    def save_as_default(cls, bot: telegram.Bot):
+    def save_as_default(cls, bot: Bot):
         cls.bot = bot
-
-    def send_msg(self, chat_id, msg):
-        self.bot.send_message(chat_id, msg)
 
     # @staticmethod
     def button(self, update, context) -> None:
@@ -117,63 +109,94 @@ class IDumanTelegramService(metaclass=Singleton):
         # CallbackQueries need to be answered, even if no notification to the user is needed
         # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
         if query.data == 'subscribe':
-            self.subscribe(update, context)
-            msg = "Subscribing is successfull ! If you want to unsubscribe \n"
+            res = self.subscribe(update, context)
+            if res[1]:
+                msg = "You are already subscribed ! But we updated in any case.. "
+            else:
+                msg = "Subscribing is successfull ! If you want to unsubscribe \n"
+            msg += r"see: \help"
 
         elif query.data == 'set_message':
             try:
-                msg = self.set_message(update, context)
+                msg = "Please type like this: \n" \
+                      "/set We have an merging announcement with one of GAFAM, 22052022-16:00"
             except PermissionError:
                 msg = "You don't have permission to create message ! \n"
+                msg += r"Please see: \help"
 
         elif query.data == 'get_message':
             msg = self.get_message(update, context)
 
+        elif query.data == 'everyone':
+            self.send_message_all(update, context)
+
         else:
             msg = "There is no option ! \n"
-
-        msg += r"Please see: \help"
+            msg += r"Please see: \help"
 
         query.answer()
 
         query.edit_message_text(text=msg)
 
     @classmethod
-    def send_message_all(cls, msg):
-        for usr in TelegramActive.objects.all():
-            bot = cls.get_user_bot(username=usr.username, add_default=False)
-            bot.send_message(msg)
+    def send_message_all(cls, update, context):
+        print("SENDING MESSAGES TO EVERYONE")
+        messages = MessageStore.objects.all()
+        if not messages:
+            update.message.reply_text("There is no saved messages : (")
+        else:
+            for msg in MessageStore.objects.all():
+                cls.send_message_one(msg)
 
-    @staticmethod
-    def set_message(update, context):
+        update.message.reply_text("We sent all messages to the everyone !")
+
+    @classmethod
+    def send_message_one(cls, msg):
+        for subs in TelegramActive.objects.all():
+            chat_id = subs.chat_id
+            cls.bot.send_message(chat_id=chat_id, text=msg.message)
+
+    # @staticmethod
+    def set_message(self, update, context):
         user = update.effective_chat.username
-        if user == 'admin':  # admin name
-            msg, tarih = context.args
+        if user == self.bot_admin_username:  # admin name
+            tarih = context.args[-1]
+            msg = " ".join(context.args[:-1])[:-1]
             response = (f"Mesaj : {msg} \n"
                         f"Tarih: {tarih}")
-            MessageStore.objects.update_or_create(
-                message=msg, tarih=tarih
-            )
-            PeriodicTask.objects.create(
 
+            tarih = datetime.strptime(tarih, self.date_format)
+            job = scheduler.add_job(
+                self.send_message_one,
+                'date',
+                kwargs={'msg': msg},
+                run_date=tarih
             )
-            return response
+            MessageStore.objects.update_or_create(
+                message=msg,
+                tarih=tarih,
+                job_id=job.id
+            )
+            update.message.reply_text('Created your scheduled message task ! \n'
+                                      f'{response}')
         else:
             raise PermissionError("You don't have admin permission, you worm !")
 
-    @staticmethod
-    def get_message(update, context):
+    def get_message(self, update, context):
         user = update.effective_chat.username
         print(f"Messages read by : {user}")
-        return "\n \n".join([f"Mesaj : {i.message} \n"
-                             f"Tarih : {i.tarih}" for i in MessageStore.objects.all()])
+        if len(MessageStore.objects.all()) > 0:
+            return "\n \n".join([f"Mesaj : {i.message} \n"
+                                 f"Tarih : {i.tarih}" for i in MessageStore.objects.all()])
+        else:
+            return f"""There is no data in feed :( Why don't you create one ? ex: /set THIS IS FIRST DATA IN FEED, {self.date_example} """
 
     @staticmethod
     def subscribe(update, context):
         user = update.effective_chat.username
         chat_id = update.effective_chat.id
 
-        TelegramActive.objects.update_or_create(
+        return TelegramActive.objects.update_or_create(
             username=user,
             chat_id=chat_id
         )

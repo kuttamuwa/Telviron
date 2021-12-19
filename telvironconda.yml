@@ -29,6 +29,7 @@ dependencies:
   - python-telegram-bot
   - yfinance
   - django-crispy-forms
+  - apscheduler
   - pip:
       - django-log-viewer
       - django-phone-verify
@@ -36,3 +37,4 @@ dependencies:
       - django-polymorphic
       - django-user-sessions
       - djangorestframework-simplejwt
+      - python-telegram-bot-calendar

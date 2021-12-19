@@ -1,10 +1,10 @@
 from django.db import models
 
-# Create your models here.
-from django_celery_beat.models import IntervalSchedule, PERIOD_CHOICES
-
 from notifications.models.managers import BaseNotificationManager
 from usrapp.models.models import CustomUser
+
+
+# Create your models here.
 
 
 # Notification models
@@ -22,6 +22,7 @@ class BaseNotification(models.Model):
 class TelegramNotification(BaseNotification):
     notifier = 'TELEGRAM'
     token = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    is_admin = models.BooleanField(default=False)
 
     class Meta:
         abstract = False
@@ -46,7 +47,8 @@ class RSSStore(models.Model):
 class MessageStore(models.Model):
     message = models.CharField(max_length=200, verbose_name='Mesaj')
     tarih = models.DateTimeField(null=False, verbose_name='Tarih')
+    job_id = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return f"Message : {self.message} \n" \
-               f"Tarih : {self.tarih} \n" \
+               f"Tarih : {self.tarih} \n"
