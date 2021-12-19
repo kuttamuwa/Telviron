@@ -114,7 +114,7 @@ class TelegramDataService(metaclass=Singleton):
         PeriodicTask.objects.update_or_create(
             interval=period,
             name=f'{user}_sendmessager_every_{every}',
-            task='notifications.services.telegram.ITelegram.TelegramDataService.send_message_all',
+            task='notifications.services.telegram.ITelegram.IDumanTelegramService.send_message_all',
             kwargs=json.dumps({
                 'msg': message
             })

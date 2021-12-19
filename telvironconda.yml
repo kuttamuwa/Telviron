@@ -5,16 +5,16 @@ channels:
   - defaults
 dependencies:
   - pip
-  - celery
+  - celery==5.1.2
   - django
-  - django-celery-beat
-  - django-celery-results
+  - django-celery-beat==2.2.1
+  - django-celery-results==2.2.0
   - django-cors-headers
   - django-debug-toolbar
   - django-filter
   - djangorestframework
   - dynaconf
-  - flower
+  - flower==1.0.0
   - numpy
   - pandas
   - proj

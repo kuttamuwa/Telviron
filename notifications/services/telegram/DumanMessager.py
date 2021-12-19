@@ -15,7 +15,7 @@ from notifications.services.telegram.singleton import Singleton
 from usrapp.models.models import CustomUser
 
 
-class TelegramDataService(metaclass=Singleton):
+class IDumanTelegramService(metaclass=Singleton):
     bot = None
 
     def __init__(self, bot=None):
@@ -52,40 +52,31 @@ class TelegramDataService(metaclass=Singleton):
         # unknown_handler = CommandHandler('', self.unknown)
         # self.dispatcher.add_handler(MessageHandler([Filters.command], self.unknown))
 
-    @staticmethod
-    def start(update, context):
+    # @staticmethod
+    def start(self, update, context):
         # save active channel information to use again
         user = update.effective_chat.username
         TelegramActive.objects.update_or_create(username=user, chat_id=update.effective_chat.id)
 
         keyboard = [
             [
-                InlineKeyboardButton("Option 1", callback_data='1'),
-                InlineKeyboardButton("Option 2", callback_data='2'),
+                InlineKeyboardButton("Get Previous All Time Messages", callback_data='get_message'),
+                InlineKeyboardButton("Subscribe", callback_data='subscribe'),
             ],
-            [InlineKeyboardButton("Option 3", callback_data='3')],
+            [InlineKeyboardButton("Set Message", callback_data='set_message')],
         ]
+        # if user != 'etoletta':
+        #     keyboard.pop()
 
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         update.message.reply_text(
-            "Hi! Welcome to Doviz RSS Feeder. If you /start me, we'll start to serve you immediately !  \n ",
+            "Hi! Welcome to Duman RSS Feeder. If you /start me, we'll start to serve you immediately !  \n ",
             reply_markup=reply_markup)
 
     @staticmethod
     def help_command(update, context):
         update.message.reply_text('Use /start to test this bot.')
-
-    @staticmethod
-    def rss_store_handler(update, context):
-        user = update.effective_chat.username
-        # todo: if user is not admin
-        rss_name, rss_link = context.args
-
-        # create rss
-
-        msg = f"We are watching the RS Service : {rss_link}"
-        update.message.reply_text(msg)
 
     @staticmethod
     def unknown(update, context):
@@ -118,16 +109,34 @@ class TelegramDataService(metaclass=Singleton):
     def send_msg(self, chat_id, msg):
         self.bot.send_message(chat_id, msg)
 
-    @staticmethod
-    def button(update, context) -> None:
+    # @staticmethod
+    def button(self, update, context) -> None:
         """Parses the CallbackQuery and updates the message text."""
         query = update.callback_query
 
         # CallbackQueries need to be answered, even if no notification to the user is needed
         # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+        if query.data == 'subscribe':
+            self.subscribe(update, context)
+            msg = "Subscribing is successfull ! If you want to unsubscribe \n"
+
+        elif query.data == 'set_message':
+            try:
+                msg = self.set_message(update, context)
+            except PermissionError:
+                msg = "You don't have permission to create message ! \n"
+
+        elif query.data == 'get_message':
+            msg = self.get_message(update, context)
+
+        else:
+            msg = "There is no option ! \n"
+
+        msg += r"Please see: \help"
+
         query.answer()
 
-        query.edit_message_text(text=f"Selected option: {query.data}")
+        query.edit_message_text(text=msg)
 
     @classmethod
     def send_message_all(cls, msg):
@@ -140,12 +149,31 @@ class TelegramDataService(metaclass=Singleton):
         user = update.effective_chat.username
         if user == 'admin':  # admin name
             msg, tarih = context.args
+            response = (f"Mesaj : {msg} \n"
+                        f"Tarih: {tarih}")
             MessageStore.objects.update_or_create(
                 message=msg, tarih=tarih
             )
-            update.message.reply_text("Message set !")
+            PeriodicTask.objects.create(
+
+            )
+            return response
         else:
-            update.message.reply_text("You don't have admin permission, you worm !")
+            raise PermissionError("You don't have admin permission, you worm !")
 
+    @staticmethod
+    def get_message(update, context):
+        user = update.effective_chat.username
+        print(f"Messages read by : {user}")
+        return "\n \n".join([f"Mesaj : {i.message} \n"
+                             f"Tarih : {i.tarih}" for i in MessageStore.objects.all()])
 
-tele_service = TelegramDataService()
+    @staticmethod
+    def subscribe(update, context):
+        user = update.effective_chat.username
+        chat_id = update.effective_chat.id
+
+        TelegramActive.objects.update_or_create(
+            username=user,
+            chat_id=chat_id
+        )
