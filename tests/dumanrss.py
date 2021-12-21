@@ -41,14 +41,17 @@ def init_bot():
     get_handler = CommandHandler('get', get_messages)
     dispatcher.add_handler(get_handler)
 
-    # get_handler_q = CommandHandler('get', get_messages)
-    # dispatcher.add_handler(get_handler)
-
     start_handler = CommandHandler('start', start_cmd)
     dispatcher.add_handler(start_handler)
 
     set_handler = CommandHandler('create', create_message)
     dispatcher.add_handler(set_handler)
+
+    drop_handler = CommandHandler('drop', drop_tasks)
+    dispatcher.add_handler(drop_handler)
+
+    send_handler = CommandHandler('send', send_cmd)
+    dispatcher.add_handler(send_handler)
 
     # polling
     updater.start_polling()
@@ -92,18 +95,17 @@ def create_environment():
 def help_cmd(update, context):
     response = f"""
     # Select
-    /get/<number>: Get nth message
+    /get/<job id>: Get task with job id
     /get: Get all messages. 
     \n
 
     # Create
     /create: (only admin) create OR UPDATE messaging task. ex: /create THIS IS FIRST DATA IN FEED, {date_example} 
-    /create/<number> (only admin) UPDATE one messaging task. ex: /create THIS IS UPDATE DATA IN FEED
     \n
 
     # Delete
     /drop: Messages can be dropped with
-    /drop/<number>: Deletes nth message
+    /drop/<job id>: Deletes nth message
     
     \n
     # Send
@@ -116,17 +118,33 @@ def help_cmd(update, context):
 # SELECT
 def get_messages(update, context):
     messages = scheduler.get_jobs()
+
+    if context.args:
+        messages = [i for i in messages if i.id == context.args[-1]]
+
     if messages:
-        messages = "\n ".join([f"Message : {i.kwargs['text']} - Run time : {i.next_run_time}" for i in messages])
+        messages = "\n ".join(
+            [f"Message : {i.kwargs['text']} - Run time : {i.next_run_time} \n Job id : {i.id}" for i in messages])
         update.message.reply_text(messages)
     else:
-        update.message.reply_text('There is no saved message :( ')
+        update.message.reply_text('There is no message ')
 
 
 def send_msg_all(text):
     print("SENDING TO EVERYONE ! ")
     for instance in session.query(TelegramActive):
         bot.send_message(chat_id=instance.chat_id, text=text)
+
+
+def send_cmd(update, context):
+    if len(context.args) < 1:
+        update.message.reply_text("Please specify your message !")
+
+    msg = context.args[-1]
+    try:
+        send_msg_all(msg)
+    except Exception as err:
+        update.message.reply_text(f"Error raised while sending messages : {err}")
 
 
 def start_cmd(update, context):
@@ -143,24 +161,40 @@ def start_cmd(update, context):
 
 
 def create_message(update, context):
-    tarih = context.args[-1]
-    msg = " ".join(context.args[:-1])[:-1]
-    tarih = datetime.strptime(tarih, date_format)
+    try:
+        tarih = context.args[-1]
+        msg = " ".join(context.args[:-1])[:-1]
+        tarih = datetime.strptime(tarih, date_format)
 
-    response = (f"Mesaj : {msg} \n"
-                f"Tarih: {tarih}")
+        response = (f"Mesaj : {msg} \n"
+                    f"Tarih: {tarih}")
 
-    job = scheduler.add_job(
-        send_msg_all,
-        'date',
-        kwargs={'text': msg},
-        run_date=tarih
-    )
+        job = scheduler.add_job(
+            send_msg_all,
+            'date',
+            kwargs={'text': msg},
+            run_date=tarih
+        )
 
-    # commit
-    session.commit()
+        # commit
+        session.commit()
+
+    except Exception as err:
+        response = f"Hata alındı : {err}"
 
     update.message.reply_text(response)
+
+
+def drop_tasks(update, context):
+    if context.args:
+        job_id = context.args[-1]
+        scheduler.remove_job(job_id)
+        res = f"{job_id} is dropped !"
+    else:
+        scheduler.remove_all_jobs()
+        res = "All tasks are dropped !"
+
+    update.message.reply_text(res)
 
 
 if __name__ == '__main__':
