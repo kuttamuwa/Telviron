@@ -14,6 +14,8 @@ from telegram.ext import Updater, CommandHandler
 
 from config import settings
 
+global bot
+
 date_example = "22052022-16:00"
 date_format = "%d%m%Y-%H:%M"
 
@@ -21,6 +23,37 @@ db = create_engine(f"sqlite:///{os.path.join(os.path.abspath('.'), 'app.db')}", 
 session = Session(bind=db)
 
 Base = declarative_base()
+
+scheduler = BackgroundScheduler(daemon=True)
+
+
+# bot init
+def init_bot():
+    # create
+    bot = Bot(token=settings.token)
+    updater = Updater(token=bot.token, use_context=True)
+    dispatcher = updater.dispatcher
+
+    # handlers
+    help_handler = CommandHandler('help', help_cmd)
+    dispatcher.add_handler(help_handler)
+
+    get_handler = CommandHandler('get', get_messages)
+    dispatcher.add_handler(get_handler)
+
+    # get_handler_q = CommandHandler('get', get_messages)
+    # dispatcher.add_handler(get_handler)
+
+    start_handler = CommandHandler('start', start_cmd)
+    dispatcher.add_handler(start_handler)
+
+    set_handler = CommandHandler('create', create_message)
+    dispatcher.add_handler(set_handler)
+
+    # polling
+    updater.start_polling()
+
+    return bot, updater
 
 
 class TelegramActive(Base):
@@ -31,22 +64,13 @@ class TelegramActive(Base):
     username = Column(String, unique=True)
 
 
-class MessageStore(Base):
-    __tablename__ = 'message_store'
-
-    id = Column(Integer, Sequence('id_seq'), primary_key=True)
-    msg = Column(String)
-    created_date = Column(DateTime, server_default=func.now())
-    run_date = Column(DateTime)
-
-
 # environment functions
 def create_user(chat_id, username):
     q = session.query(TelegramActive).filter(TelegramActive.chat_id == chat_id)
     if q.count() == 1:
         q.update(values={
             'chat_id': chat_id,
-            'username': 'yarrraaak'})
+            'username': username})
     else:
         user = TelegramActive(chat_id=chat_id, username=username)
         session.add(user)
@@ -65,7 +89,42 @@ def create_environment():
 
 
 # bot functions
+def help_cmd(update, context):
+    response = f"""
+    # Select
+    /get/<number>: Get nth message
+    /get: Get all messages. 
+    \n
+
+    # Create
+    /create: (only admin) create OR UPDATE messaging task. ex: /create THIS IS FIRST DATA IN FEED, {date_example} 
+    /create/<number> (only admin) UPDATE one messaging task. ex: /create THIS IS UPDATE DATA IN FEED
+    \n
+
+    # Delete
+    /drop: Messages can be dropped with
+    /drop/<number>: Deletes nth message
+    
+    \n
+    # Send
+    /send: Started to send each message to everyone
+    """
+
+    update.message.reply_text(response)
+
+
+# SELECT
+def get_messages(update, context):
+    messages = scheduler.get_jobs()
+    if messages:
+        messages = "\n ".join([f"Message : {i.kwargs['text']} - Run time : {i.next_run_time}" for i in messages])
+        update.message.reply_text(messages)
+    else:
+        update.message.reply_text('There is no saved message :( ')
+
+
 def send_msg_all(text):
+    print("SENDING TO EVERYONE ! ")
     for instance in session.query(TelegramActive):
         bot.send_message(chat_id=instance.chat_id, text=text)
 
@@ -83,41 +142,10 @@ def start_cmd(update, context):
     )
 
 
-def help_cmd(update, context):
-    response = f"""
-    # Select
-    /get/<number>: Get nth message
-    
-    \n\n
-    
-    # Create
-    /create: (only admin) create OR UPDATE messaging task. ex: /create THIS IS FIRST DATA IN FEED, {date_example} 
-    /create/<number> (only admin) UPDATE one messaging task. ex: /create THIS IS UPDATE DATA IN FEED
-    \n\n
-    
-    # Read
-    /get: Get all messages. 
-    
-    \n\n
-    
-    # Delete
-    /drop: Messages can be dropped with
-    /drop/<number>: Deletes nth message
-    
-    """
-
-    update.message.reply_text(response)
-
-
 def create_message(update, context):
     tarih = context.args[-1]
     msg = " ".join(context.args[:-1])[:-1]
     tarih = datetime.strptime(tarih, date_format)
-
-    # msg
-    MessageStore(
-        msg=msg, run_date=tarih
-    )
 
     response = (f"Mesaj : {msg} \n"
                 f"Tarih: {tarih}")
@@ -135,46 +163,9 @@ def create_message(update, context):
     update.message.reply_text(response)
 
 
-def get_messages(update, context):
-    messages = " \n\n".join([f"Mesaj : {instance.msg} - Tarih : {instance.run_date}" for
-                             instance in session.query(MessageStore)])
-
-    update.message.reply_text(messages)
-
-
-# bot init
-def init_bot():
-    # create
-    bot = Bot(token=settings.token)
-    updater = Updater(token=bot.token, use_context=True)
-    dispatcher = updater.dispatcher
-
-    # handlers
-    start_handler = CommandHandler('start', start_cmd)
-    dispatcher.add_handler(start_handler)
-
-    set_handler = CommandHandler('set', create_message)
-    dispatcher.add_handler(set_handler)
-
-    # polling
-    updater.start_polling()
-    updater.idle()
-
-    return bot
-
-
-def create_scheduler():
-    scheduler = BackgroundScheduler()
-    return scheduler
-
-
-# style: button
-# dispatcher.add_handler(CallbackQueryHandler(button)
-
-
 if __name__ == '__main__':
-    create_environment()
+    bot, updater = init_bot()
 
-    bot = init_bot()
-    scheduler = create_scheduler()
-    print("Running..")
+    create_environment()
+    scheduler.start()
+    updater.idle()
