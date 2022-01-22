@@ -1,4 +1,4 @@
-from notifications.services.telegram.DumanMessager import IDumanTelegramService
+from notifications.services.telegram.ITelegram import TelegramDataService
 
-tele_service = IDumanTelegramService()
+tele_service = TelegramDataService()
 
