@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
 
 import ccxt
+import pandas as pd
 
 from price.models.models import EMA_ENUMS
 
