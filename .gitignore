@@ -6,3 +6,4 @@
 /price/migrations/
 /notifications/migrations/
 /DovizPanel/settings.py
+./settings.toml
